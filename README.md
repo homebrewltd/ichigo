@@ -53,3 +53,7 @@ Run
 ```bash
 accelerate launch --config_file {path/to/config/my_config_file.yaml} adam_mini_train.py
 ```
+
+## 3. TODO
+
+- [ ] Add single inference script
