@@ -1,0 +1,5 @@
+.trunk
+**/__pycache__/
+**/*.pyc
+.vscode
+ruff.toml
