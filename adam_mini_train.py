@@ -18,7 +18,6 @@ import Adam_mini
 
 # Constants
 MODEL_PATH = "meta-llama/Meta-Llama-3-8B-Instruct"
-HF_TOKEN = "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"
 DATASET_NAME = "jan-hq/instruction-speech-conversation"
 NEW_SOUND_START = "<|sound_start|>"
 NEW_SOUND_END = "<|sound_end|>"
@@ -39,14 +38,12 @@ def load_model_and_tokenizer():
         torch_dtype=torch.bfloat16,
         attn_implementation="flash_attention_2",
         use_cache=False,
-        token=HF_TOKEN,
     )
 
     tokenizer = AutoTokenizer.from_pretrained(
         MODEL_PATH,
         use_fast=True,
         padding_side="right",
-        token=HF_TOKEN,
     )
     tokenizer.pad_token = tokenizer.eos_token
 

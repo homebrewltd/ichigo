@@ -1,6 +1,9 @@
 # Sound Instruct Llama3
 
-## 1. Data Preparation
+## 1. Training Setup and Data Processing
+<!-- readme chưa chấp nhận được
+giải thích by default dùng data và model nào ở đâu (instruct và cái data có sẵn mình trên hf)
+by default mọi thứ setup rồi ko cần làm gì nhưng nếu bạn muốn coi sound synthetic thì vô data processing -->
 
 Check out [DATA PROCESSING](data/README.md)
 
@@ -60,4 +63,4 @@ accelerate launch --config_file {path/to/config/my_config_file.yaml} adam_mini_t
   - [ ] Add faster inference with vllm
 
 ## 4. Acknowledgement
-Super duper thankful to the team behind [Adam-mini](https://github.com/zyushun/Adam-mini) for their superb work.
+Super duper thankful to the team behind [Adam-mini](https://github.com/zyushun/Adam-mini) and [Llama3](https://github.com/meta-llama/llama3) for their superb works.
