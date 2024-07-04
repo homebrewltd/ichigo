@@ -1,10 +1,10 @@
+"""Train the model using the Adam_mini optimizer."""
 import multiprocessing
 import os
-import time
 from typing import Any, Dict, List
 
 import torch
-from datasets import Dataset, interleave_datasets, load_dataset
+from datasets import interleave_datasets, load_dataset
 from transformers import (
     AutoConfig,
     AutoModelForCausalLM,
@@ -160,6 +160,8 @@ def prepare_dataset(tokenizer):
 
 
 class CustomSFTTrainer(SFTTrainer):
+    """Custom Trainer for training the model."""
+
     def create_optimizer_and_scheduler(self, num_training_steps: int):
         """Create the optimizer and learning rate scheduler.
 
@@ -263,6 +265,7 @@ def main():
     )
 
     trainer_stats = trainer.train(resume_from_checkpoint=True)
+    print_once(trainer_stats)
     print_once("Training completed.")
 
 

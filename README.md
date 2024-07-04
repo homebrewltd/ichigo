@@ -57,3 +57,7 @@ accelerate launch --config_file {path/to/config/my_config_file.yaml} adam_mini_t
 ## 3. TODO
 
 - [ ] Add single inference script
+  - [ ] Add faster inference with vllm
+
+## 4. Acknowledgement
+Super duper thankful to the team behind [Adam-mini](https://github.com/zyushun/Adam-mini) for their superb work.
