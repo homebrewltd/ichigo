@@ -1,8 +1,15 @@
+"""Generate TTS from prompts."""
 import argparse
 import os
-
 from datasets import load_dataset
+from datasets.utils.logging import disable_progress_bar
+
+
 from whisperspeech.pipeline import Pipeline
+import warnings
+
+disable_progress_bar()  # disable progress bar
+warnings.filterwarnings("ignore")
 
 
 def parse_args():
@@ -14,14 +21,10 @@ def parse_args():
 
 
 def main(start, end):
-    """Generate TTS from prompts and save to audio files.
-
-    Args:
-        start (int): Start index of the dataset
-        end (int): End index of the dataset
-    """
+    """Generate TTS from prompts."""
     # Load dataset and filter by index range
-    dataset = load_dataset("jan-hq/prompt-voice", split="train", num_proc=64)
+    dataset = load_dataset("jan-hq/instruction-speech-v1.5", split="train", num_proc=64)
+
     filtered_dataset = dataset.filter(lambda x: start <= x["index"] <= end)
 
     # Initialize the pipeline

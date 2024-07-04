@@ -21,11 +21,5 @@
 - Convert `instruction-speech-v1.5` into sound instruct dataset
 
 ```bash
-bash run_tts.sh
-```
-
-- Convert sound into tokens:
-
-```bash
-bash run_convert.sh
+python run_tts_convert.py --total_samples <total_samples> --batch_size <batch_size>
 ```
