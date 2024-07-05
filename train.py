@@ -176,7 +176,8 @@ trainer = SFTTrainer(
         output_dir="outputs",
         report_to="tensorboard",
         max_grad_norm=1,
-        optim="adamw_torch_fused"
+        optim="adamw_torch_fused",
+        lr_scheduler_type="cosine"
     ),
 )
 
