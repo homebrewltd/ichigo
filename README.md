@@ -1,11 +1,5 @@
 # sound_instruct_llama3
 
-## Logging Huggingface
-
-```
-huggingface-cli login --token=<token>
-```
-
 ## Clone
 
 ```
@@ -19,6 +13,12 @@ chmod +x install.sh
 
 chmod +x setup.sh
 ./setup.sh
+```
+
+## Logging Huggingface
+
+```
+huggingface-cli login --token=<token>
 ```
 
 ## Training
