@@ -15,6 +15,7 @@ Restart shell now
 ```
 chmod +x setup.sh
 ./setup.sh
+source myenv/bin/activate
 ```
 
 ## Logging Huggingface
