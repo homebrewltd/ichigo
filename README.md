@@ -24,5 +24,5 @@ chmod +x setup.sh
 ## Training
 ```
 export CUDA_VISIBLE_DEVICES=0,1,2,3
-accelerate launch train.py --config_file ./accelerate_config.yaml
+accelerate launch --config_file ./accelerate_config.yaml train.py 
 ```
