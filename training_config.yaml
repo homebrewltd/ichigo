@@ -1,7 +1,6 @@
 # Model and tokenizer configuration
 model:
   path: "jan-hq/llama-3-sound-init"
-  token: "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"
   dtype: "bfloat16"
   attn_implementation: "flash_attention_2"
 
