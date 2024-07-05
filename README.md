@@ -23,6 +23,7 @@ chmod +x setup.sh
 
 ## Training
 ```
+export CUTLASS_PATH="cutlass"
 export CUDA_VISIBLE_DEVICES=0,1,2,3
 accelerate launch --config_file ./accelerate_config.yaml train.py 
 ```
