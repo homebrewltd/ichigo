@@ -1,5 +1,5 @@
-pyenv install 3.11.0
-pyenv global 3.11.0
+pyenv install 3.11.9
+pyenv global 3.11.9
 
 python -m venv myenv
 source myenv/bin/activate
