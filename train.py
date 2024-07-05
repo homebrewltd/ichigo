@@ -91,28 +91,28 @@ print_once(dataset_train[200]["text"][:100])
 print_once("___________________________________")
 
 
-class CustomSFTTrainer(SFTTrainer):
-    def create_optimizer_and_scheduler(self, num_training_steps: int):
-        config = AutoConfig.from_pretrained(self.model.config.name_or_path)
+# class CustomSFTTrainer(SFTTrainer):
+#     def create_optimizer_and_scheduler(self, num_training_steps: int):
+#         config = AutoConfig.from_pretrained(self.model.config.name_or_path)
 
-        self.optimizer = Adam_mini(
-            model=self.model,
-            lr=self.args.learning_rate,
-            weight_decay=self.args.weight_decay,
-            beta1=0.9,
-            beta2=0.98,
-            epsilon=1e-6,
-            zero_3=True,
-            n_embd=config.hidden_size,
-            n_head=config.num_attention_heads,
-            n_query_groups=config.num_key_value_heads,  # GQA
-        )
+#         self.optimizer = Adam_mini(
+#             model=self.model,
+#             lr=self.args.learning_rate,
+#             weight_decay=self.args.weight_decay,
+#             beta1=0.9,
+#             beta2=0.98,
+#             epsilon=1e-6,
+#             zero_3=True,
+#             n_embd=config.hidden_size,
+#             n_head=config.num_attention_heads,
+#             n_query_groups=config.num_key_value_heads,  # GQA
+#         )
 
-        self.lr_scheduler = get_cosine_schedule_with_warmup(
-            self.optimizer,
-            num_warmup_steps=int(num_training_steps * 0.1),  # 10% warmup
-            num_training_steps=num_training_steps,
-        )
+#         self.lr_scheduler = get_cosine_schedule_with_warmup(
+#             self.optimizer,
+#             num_warmup_steps=int(num_training_steps * 0.1),  # 10% warmup
+#             num_training_steps=num_training_steps,
+#         )
 
 
 # Training args
@@ -153,7 +153,7 @@ print_once(f"{'Saving steps':30} {save_steps}")
 print_once("___________________________________")
 
 # Create the custom trainer
-trainer = CustomSFTTrainer(
+trainer = SFTTrainer(
     model=model,
     tokenizer=tokenizer,
     train_dataset=dataset_train,
@@ -176,6 +176,7 @@ trainer = CustomSFTTrainer(
         output_dir="outputs",
         report_to="tensorboard",
         max_grad_norm=1,
+        optim="adamw_torch_fused"
     ),
 )
 
