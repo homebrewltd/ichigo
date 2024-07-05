@@ -43,7 +43,10 @@ tokenizer = AutoTokenizer.from_pretrained(
     padding_side="right",
 )
 
-tokenizer.add_special_tokens({"pad_token": "<PAD>"})
+# change pad token to reserve space for special tokens
+# set 128023 as pad token
+tokenizer.pad_token_id = 128023
+tokenizer.pad_token = tokenizer.convert_ids_to_tokens(128023)
 print_once(tokenizer.pad_token_id)
 print_once(len(tokenizer.get_vocab()))
 print_once("--- Initialization complete ---")
