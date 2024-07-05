@@ -14,8 +14,6 @@ fsdp_config:
   fsdp_state_dict_type: SHARDED_STATE_DICT
   fsdp_sync_module_states: true
   fsdp_use_orig_params: false
-dynamo_config:
-  dynamo_backend: INDUCTOR
 machine_rank: 0
 main_training_function: main
 mixed_precision: bf16
