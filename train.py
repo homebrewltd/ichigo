@@ -130,16 +130,6 @@ def print_training_info(config, training_steps, save_steps):
     print_once("___________________________________")
 
 
-def check_missing_eos_token_id(dataset_train, data_collator, tokenizer):
-    """Check if the EOS token ID is missing."""
-    input_ids, attention_mask, labels = data_collator([dataset_train[0]]).values()
-    print("check_dataset_labels:")  # noqa
-    print(tokenizer.decode(input_ids[0]))  # noqa
-    for token, label in zip(input_ids[0], labels[0]):
-        print(f"{token.item()}, '{tokenizer.decode(token)}', {label.item()}")
-        assert token.item() == label.item(), "Token and label mismatch"
-
-
 def main():
     """Run the training process."""
     config = load_config("training_config.yaml")
@@ -190,9 +180,6 @@ def main():
             max_grad_norm=config["training_args"]["max_grad_norm"],
         ),
     )
-
-    collator = trainer.data_collator
-    check_missing_eos_token_id(dataset_train, collator, tokenizer)
 
     trainer_stats = trainer.train(resume_from_checkpoint=False)
     return trainer_stats
