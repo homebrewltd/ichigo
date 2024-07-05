@@ -9,11 +9,13 @@ fsdp_config:
   fsdp_backward_prefetch: BACKWARD_PRE
   fsdp_cpu_ram_efficient_loading: true
   fsdp_forward_prefetch: false
-  fsdp_offload_params: true
+  fsdp_offload_params: false
   fsdp_sharding_strategy: FULL_SHARD
   fsdp_state_dict_type: SHARDED_STATE_DICT
   fsdp_sync_module_states: true
-  fsdp_use_orig_params: false
+  fsdp_use_orig_params: true
+dynamo_config:
+  dynamo_backend: INDUCTOR
 machine_rank: 0
 main_training_function: main
 mixed_precision: bf16
