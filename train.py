@@ -1,75 +1,96 @@
 import torch
 import os
-import multiprocessing
-import yaml
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
     TrainingArguments,
     get_cosine_schedule_with_warmup,
-    AutoConfig,
 )
+
 from trl import SFTTrainer
+import multiprocessing
 from datasets import load_dataset
+from transformers import AutoConfig
+
 from Adam_mini import Adam_mini
 
 
 def print_once(message):
-    """Print a message only once."""
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(message)
 
 
-def load_config(config_path):
-    """Load the configuration file."""
-    with open(config_path, "r") as file:
-        return yaml.safe_load(file)
+num_cores = multiprocessing.cpu_count()
+print_once(f"Number of CPU cores: {num_cores}")
+print_once("___________________________________")
+
+# Model loading
+print_once("--- Load Model ---")
+model_path = "jan-hq/llama-3-sound-init"
+model = AutoModelForCausalLM.from_pretrained(
+    model_path,
+    torch_dtype=torch.bfloat16,
+    attn_implementation="flash_attention_2",
+    use_cache=False,
+    token="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",
+)
 
 
-def load_model_and_tokenizer(config):
-    """Load the model and tokenizer."""
-    print_once("--- Load Model ---")
-    model = AutoModelForCausalLM.from_pretrained(
-        config["model"]["path"],
-        torch_dtype=getattr(torch, config["model"]["dtype"]),
-        attn_implementation=config["model"]["attn_implementation"],
-        use_cache=False
-    )
+# Tokenizer loading
+print_once("--- Load Tokenizer ---")
+tokenizer = AutoTokenizer.from_pretrained(
+    model_path,
+    use_fast=True,
+    padding_side="right",
+    token="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",
+)
 
-    print_once("--- Load Tokenizer ---")
-    tokenizer = AutoTokenizer.from_pretrained(
-        config["model"]["path"],
-        use_fast=True,
-        padding_side="right"
-    )
-    tokenizer.add_special_tokens({"pad_token": "<PAD>"})
+tokenizer.add_special_tokens({"pad_token": "<PAD>"})
+print_once(tokenizer.pad_token_id)
+print_once(len(tokenizer.get_vocab()))
+print_once("--- Initialization complete ---")
 
-    print_once(f"Pad token ID: {tokenizer.pad_token_id}")
-    print_once(f"Vocabulary size: {len(tokenizer.get_vocab())}")
-    print_once("--- Initialization complete ---")
+# Setting up data train
+dataset_train = load_dataset(
+    "jan-hq/instruction-speech-conversation-interleaved",
+    num_proc=num_cores,
+    split="train",
+)
+# def formatting_prompts_func(examples, column_name):
+#     convos = examples[column_name]
+#     texts = [tokenizer.apply_chat_template(convo, tokenize=False, add_generation_prompt=False) for convo in convos]
+#     return {"text": texts}
 
-    return model, tokenizer
+# dataset = load_dataset("jan-hq/instruction-speech-conversation", num_proc=num_cores, split="train")
+# columns_to_remove = [col for col in dataset.column_names if col not in ["sound_convo", "text_convo"]]
+# dataset = dataset.remove_columns(columns_to_remove)
+# print_once(dataset)
 
+# dataset_sound = dataset.map(
+#     lambda x: formatting_prompts_func(x, "sound_convo"),
+#     batched=True,
+#     num_proc=num_cores,
+#     batch_size=10000
+# ).remove_columns(["sound_convo","text_convo"])
+# print_once(dataset_sound)
 
-def load_dataset_train(config, num_cores):
-    """Load the training dataset."""
-    dataset_train = load_dataset(
-        config["dataset"]["name"],
-        num_proc=num_cores,
-        split=config["dataset"]["split"],
-    )
-    return dataset_train
+# dataset_text = dataset.map(
+#     lambda x: formatting_prompts_func(x, "text_convo"),
+#     batched=True,
+#     num_proc=num_cores,
+#     batch_size=10000
+# ).remove_columns(["sound_convo","text_convo"])
+# print_once(dataset_text)
 
+# dataset_train = interleave_datasets([dataset_sound, dataset_text], probabilities=[0.8, 0.2], seed=42, stopping_strategy="first_exhausted")
 
-def print_dataset_info(dataset):
-    """Print information about the dataset."""
-    print_once("___________________________________")
-    print_once(dataset)
-    print_once("-----------------------------------")
-    print_once(dataset[0]["text"][:100])
-    print_once("-----------------------------------")
-    print_once(dataset[200]["text"][:100])
-    print_once("___________________________________")
+print_once("___________________________________")
+print_once(dataset_train)
+print_once("-----------------------------------")
+print_once(dataset_train[0]["text"][:100])
+print_once("-----------------------------------")
+print_once(dataset_train[200]["text"][:100])
+print_once("___________________________________")
 
 
 class CustomSFTTrainer(SFTTrainer):
@@ -96,90 +117,68 @@ class CustomSFTTrainer(SFTTrainer):
         )
 
 
-def calculate_training_steps(dataset, config, num_gpus):
-    """Calculate the total number of training steps."""
+# Training args
+per_device_train_batch_size = 3
+num_train_epochs = 1
+gradient_accumulation_steps = 4
+
+print_once("___________________________________")
+print_once(f"{'Per Device Train Batch Size:':30} {per_device_train_batch_size}")
+print_once(f"{'Number of Training Epochs:':30} {num_train_epochs}")
+print_once(f"{'Gradient Accumulation Steps:':30} {gradient_accumulation_steps}")
+
+config = AutoConfig.from_pretrained(model_path)
+gpu_count = torch.cuda.device_count()
+
+
+def training_step_calc(
+    dataset, batch_size, num_gpus, num_epochs, gradient_accumulation_steps
+):
     total_samples = len(dataset)
-    effective_batch_size = (
-        config["training"]["per_device_train_batch_size"]
-        * num_gpus
-        * config["training"]["gradient_accumulation_steps"]
-    )
+    effective_batch_size = batch_size * num_gpus * gradient_accumulation_steps
     steps_per_epoch = total_samples // effective_batch_size
-    total_steps = steps_per_epoch * config["training"]["num_train_epochs"]
+    total_steps = steps_per_epoch * num_epochs
     return total_steps
 
 
-def print_training_info(config, training_steps, save_steps):
-    """Print information about the training process."""
-    print_once("___________________________________")
-    print_once(
-        f"{'Per Device Train Batch Size:':30} {config['training']['per_device_train_batch_size']}"
-    )
-    print_once(
-        f"{'Number of Training Epochs:':30} {config['training']['num_train_epochs']}"
-    )
-    print_once(
-        f"{'Gradient Accumulation Steps:':30} {config['training']['gradient_accumulation_steps']}"
-    )
-    print_once(f"{'Training steps':30} {training_steps}")
-    print_once(f"{'Saving steps':30} {save_steps}")
-    print_once("___________________________________")
+training_steps = training_step_calc(
+    dataset=dataset_train,
+    batch_size=per_device_train_batch_size,
+    num_gpus=gpu_count,
+    num_epochs=num_train_epochs,
+    gradient_accumulation_steps=gradient_accumulation_steps,
+)
 
+save_steps = int(training_steps // 80)
+print_once(f"{'Training steps':30} {training_steps}")
+print_once(f"{'Saving steps':30} {save_steps}")
+print_once("___________________________________")
 
-def main():
-    """Run the training process."""
-    config = load_config("training_config.yaml")
+# Create the custom trainer
+trainer = CustomSFTTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    train_dataset=dataset_train,
+    dataset_text_field="text",
+    max_seq_length=4096,
+    dataset_num_proc=num_cores,
+    packing=False,
+    args=TrainingArguments(
+        per_device_train_batch_size=per_device_train_batch_size,
+        gradient_accumulation_steps=gradient_accumulation_steps,
+        num_train_epochs=num_train_epochs,
+        bf16=True,
+        logging_steps=1,
+        save_strategy="steps",
+        save_steps=save_steps,
+        save_total_limit=5,
+        learning_rate=5e-5,
+        weight_decay=0.01,
+        seed=3407,
+        output_dir="outputs",
+        report_to="tensorboard",
+        max_grad_norm=1,
+    ),
+)
 
-    num_cores = multiprocessing.cpu_count()
-    print_once(f"Number of CPU cores: {num_cores}")
-    print_once("___________________________________")
-
-    model, tokenizer = load_model_and_tokenizer(config)
-
-    dataset_train = load_dataset_train(config, num_cores)
-    print_dataset_info(dataset_train)
-
-    gpu_count = torch.cuda.device_count()
-
-    training_steps = calculate_training_steps(dataset_train, config, gpu_count)
-    save_steps = int(training_steps // 80)
-
-    print_training_info(config, training_steps, save_steps)
-
-    # Create the custom trainer
-    trainer = CustomSFTTrainer(
-        model=model,
-        tokenizer=tokenizer,
-        train_dataset=dataset_train,
-        dataset_text_field="text",
-        max_seq_length=config["training"]["max_seq_length"],
-        dataset_num_proc=num_cores,
-        packing=config["training"]["packing"],
-        args=TrainingArguments(
-            per_device_train_batch_size=config["training"][
-                "per_device_train_batch_size"
-            ],
-            gradient_accumulation_steps=config["training"][
-                "gradient_accumulation_steps"
-            ],
-            num_train_epochs=config["training"]["num_train_epochs"],
-            bf16=config["training_args"]["bf16"],
-            logging_steps=config["training_args"]["logging_steps"],
-            save_strategy=config["training_args"]["save_strategy"],
-            save_steps=save_steps,
-            save_total_limit=config["training_args"]["save_total_limit"],
-            learning_rate=config["optimizer"]["learning_rate"],
-            weight_decay=config["optimizer"]["weight_decay"],
-            seed=config["training_args"]["seed"],
-            output_dir=config["training_args"]["output_dir"],
-            report_to=config["training_args"]["report_to"],
-            max_grad_norm=config["training_args"]["max_grad_norm"],
-        ),
-    )
-
-    trainer_stats = trainer.train(resume_from_checkpoint=False)
-    return trainer_stats
-
-
-if __name__ == "__main__":
-    main()
+trainer_stats = trainer.train(resume_from_checkpoint=False)
