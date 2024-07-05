@@ -32,7 +32,6 @@ model = AutoModelForCausalLM.from_pretrained(
     torch_dtype=torch.bfloat16,
     attn_implementation="flash_attention_2",
     use_cache=False,
-    token="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",
 )
 
 
@@ -42,7 +41,6 @@ tokenizer = AutoTokenizer.from_pretrained(
     model_path,
     use_fast=True,
     padding_side="right",
-    token="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",
 )
 
 tokenizer.add_special_tokens({"pad_token": "<PAD>"})
