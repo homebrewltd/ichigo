@@ -1,5 +1,11 @@
 # sound_instruct_llama3
 
+## Clone
+
+```
+git clone --single-branch --branch training_script https://github.com/janhq/sound_instruct_llama3
+```
+
 ## Install
 ```
 chmod +x install.sh
