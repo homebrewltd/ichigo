@@ -11,10 +11,10 @@ pip install -U wheel
 
 pip install packaging
 
-pip install flash-attn --no-build-isolation
-
 # Install PyTorch with CUDA support
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+pip install flash-attn --no-build-isolation
 
 pip install transformers datasets deepspeed accelerate tensorboardX bitsandbytes trl peft
 
