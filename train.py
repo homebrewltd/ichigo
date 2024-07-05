@@ -73,18 +73,16 @@ def print_dataset_info(dataset):
 
 
 class CustomSFTTrainer(SFTTrainer):
-    """Custom trainer class."""
     def create_optimizer_and_scheduler(self, num_training_steps: int):
-        """Create the optimizer and scheduler."""
         config = AutoConfig.from_pretrained(self.model.config.name_or_path)
 
         self.optimizer = Adam_mini(
             model=self.model,
             lr=self.args.learning_rate,
             weight_decay=self.args.weight_decay,
-            beta1=self.config["optimizer"]["beta1"],
-            beta2=self.config["optimizer"]["beta2"],
-            epsilon=self.config["optimizer"]["epsilon"],
+            beta1=0.9,
+            beta2=0.98,
+            epsilon=1e-6,
             zero_3=True,
             n_embd=config.hidden_size,
             n_head=config.num_attention_heads,
@@ -93,9 +91,7 @@ class CustomSFTTrainer(SFTTrainer):
 
         self.lr_scheduler = get_cosine_schedule_with_warmup(
             self.optimizer,
-            num_warmup_steps=int(
-                num_training_steps * self.config["scheduler"]["warmup_ratio"]
-            ),
+            num_warmup_steps=int(num_training_steps * 0.1),  # 10% warmup
             num_training_steps=num_training_steps,
         )
 
