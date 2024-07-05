@@ -33,16 +33,14 @@ def load_model_and_tokenizer(config):
         config["model"]["path"],
         torch_dtype=getattr(torch, config["model"]["dtype"]),
         attn_implementation=config["model"]["attn_implementation"],
-        use_cache=False,
-        token=config["model"]["token"],
+        use_cache=False
     )
 
     print_once("--- Load Tokenizer ---")
     tokenizer = AutoTokenizer.from_pretrained(
         config["model"]["path"],
         use_fast=True,
-        padding_side="right",
-        token=config["model"]["token"],
+        padding_side="right"
     )
     tokenizer.add_special_tokens({"pad_token": "<PAD>"})
 
