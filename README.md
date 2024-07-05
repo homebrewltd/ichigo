@@ -1,5 +1,11 @@
 # sound_instruct_llama3
 
+## Logging Huggingface
+
+```
+huggingface-cli login --token=<token>
+```
+
 ## Clone
 
 ```
