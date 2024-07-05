@@ -10,7 +10,9 @@ git clone --single-branch --branch training_script https://github.com/janhq/soun
 ```
 chmod +x install.sh
 ./install.sh
-
+```
+Restart shell now
+```
 chmod +x setup.sh
 ./setup.sh
 ```
