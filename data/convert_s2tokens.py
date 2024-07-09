@@ -38,9 +38,9 @@ indices = [int(match.group(1)) for file in files if (match := re.match(pattern, 
 print(len(indices), indices[0])
 
 # Load and filter the dataset
-dataset = load_dataset("jan-hq/prompt-voice", split='train')
+dataset = load_dataset("jan-hq/instruction-speech-v1.5", split='train')
 list_index = set(indices)
-filtered_dataset = dataset.filter(lambda batch: [idx in list_index for idx in batch['index']], batched=True, num_proc=64)
+filtered_dataset = dataset.filter(lambda batch: [idx in list_index for idx in batch['index']], batched=True, num_proc=64) # Filter the dataset
 
 print(filtered_dataset)
 
