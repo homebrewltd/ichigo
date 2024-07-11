@@ -1,9 +1,9 @@
-import os
 from typing import List, Tuple
 
 import torch
 from encodec import EncodecModel
 from encodec.utils import convert_audio
+
 
 class AudioTokenizer:
     def __init__(self, device: str = "cuda:0"):

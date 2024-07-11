@@ -1,204 +1,152 @@
 import os
-import json
-from typing import List, Dict, Any
-import asyncio
+import warnings
+from math import ceil
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from multiprocessing import Queue, Process, Value
+from typing import List
 
 import torch
 import torchaudio
-from datasets import Dataset
-from loguru import logger as logging
-from tqdm.asyncio import tqdm
+from datasets import Dataset, load_dataset
+from loguru import logger
+from tqdm import tqdm
 
 from audio_tokenizer import AudioTokenizer
 from tts_processor import TTSProcessor
 
+warnings.filterwarnings("ignore")
 
-class CombinedTTSTokenizer:
-    def __init__(
-        self,
-        device: str = "cuda:0",
-        sample_rate: int = 24_000,
-        max_retries: int = 3,
-    ):
-        """Initialize the processor with TTS and audio tokenizer models."""
-        self.tts_processor = TTSProcessor(device=device)
-        self.audio_tokenizer = AudioTokenizer(device=device)
-        self.device = device
-        self.sample_rate = sample_rate
-        self.max_retries = max_retries
-
-    @torch.no_grad()
-    def process_text(self, text: str, index: int) -> Dict[str, Any]:
-        """Process text to generate audio and tokens in a single call.
-        
-        Args:
-            text: The text to process.
-            index: The index of the text in the dataset.
-
-        Returns:
-            A dictionary containing the index, audio, and tokens if successful,
-            otherwise None.
-        """
-        for attempt in range(self.max_retries):
-            try:
-                # Generate audio from text
-                audio = self.tts_processor.convert_text_to_audio(text)
-
-                # Generate tokens from audio
-                audio_tokens = self.audio_tokenizer.process_single_audio(
-                    (audio, self.sample_rate)
-                )
-
-                return {"index": index, "audio": audio, "tokens": audio_tokens}
-            except Exception as e:
-                logging.warning(
-                    f"Attempt {attempt + 1} failed for index {index}: {str(e)}"
-                )
-                if attempt == self.max_retries - 1:
-                    logging.error(f"All attempts failed for index {index}")
-                    return None
-        return None
+logger.remove()
+logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
 
 
-async def save_results(result: Dict[str, Any], audio_dir: str, token_dir: str):
-    """Asynchronously save audio and tokens to files.
-    
-    Args:
-        result: A dictionary containing the index, audio, and tokens.
-        audio_dir: The directory to save audio files.
-        token_dir: The directory to save token files.
-    """
-    if result is None:
-        return
-
-    index = result["index"]
-    audio = result["audio"]
-    tokens = result["tokens"]
-
-    # Save audio
-    audio_path = os.path.join(audio_dir, f"audio_{index}.wav")
-    await asyncio.to_thread(torchaudio.save, audio_path, audio, 24000)
-
-    # Save tokens
-    token_path = os.path.join(token_dir, f"audio_token_{index}.json")
-    await asyncio.to_thread(lambda: json.dump(tokens, open(token_path, "w")))
-
-
-async def save_failed_indices(failed_indices: List[int], failed_indices_file: str):
-    """Save the indices of failed processing attempts to a file.
-    
-    Args:
-        failed_indices: A list of indices that failed to process.
-        failed_indices_file: The file to save the failed indices.
-    """
-    await asyncio.to_thread(lambda: json.dump(failed_indices, open(failed_indices_file, "w")))
-
-
-async def process_and_save(
-    processor: CombinedTTSTokenizer,
-    item: Dict[str, Any],
-    audio_dir: str,
-    token_dir: str,
-    failed_indices: List[int],
+@torch.no_grad()
+def process_text(
+    text: str,
+    index: int,
+    device: str = "cuda:0",
+    sample_rate: int = 24_000,
+    max_retries: int = 3,
 ):
-    """Process text and save results asynchronously.
+    """Convert text to audio and tokenize the audio.
     
     Args:
-        processor: The processor to use for the text.
-        item: A dictionary containing the text and index.
-        audio_dir: The directory to save audio files.
-        token_dir: The directory to save token files.
-        failed_indices: A list to collect indices of failed processing attempts.
+        text (str): The text to convert to audio.
+        index (int): The index of the example.
+        device (str, optional): The device to use for processing. Defaults to "cuda:0".
+        sample_rate (int, optional): The sample rate of the audio. Defaults to 24_000.
+        max_retries (int, optional): The maximum number of retries. Defaults to 3.
+    
+    Returns:
+        dict: A dictionary containing the index, audio, and tokens or None if all attempts failed.
     """
-    result = await asyncio.to_thread(
-        processor.process_text, item["prompt"], item["index"]
-    )
-    if result:
-        await save_results(result, audio_dir, token_dir)
-    else:
-        failed_indices.append(item["index"])
+    logger.info(f"Processing index {index}")
+    tts_processor = TTSProcessor(device=device)
+    audio_tokenizer = AudioTokenizer(device=device)
+    for attempt in range(max_retries):
+        try:
+            audio = tts_processor.convert_text_to_audio(text).cpu()
+            audio_tokens = audio_tokenizer.process_single_audio((audio, sample_rate))
+            output = {"index": index, "audio": audio, "tokens": audio_tokens}
+        except Exception as e:
+            logger.warning(f"Attempt {attempt + 1} failed for index {index}: {str(e)}")
+            if attempt == max_retries - 1:
+                logger.error(f"All attempts failed for index {index}")
+                output = None
+    
+    del tts_processor
+    del audio_tokenizer
+    torch.cuda.empty_cache()
+    return output
 
 
-async def process_batch(
-    processors: List[CombinedTTSTokenizer],
-    batch: Dataset,
-    audio_dir: str,
-    token_dir: str,
-    pbar: tqdm,
-    failed_indices: List[int],
+def save_audio_tokens(
+    queue: Queue, audio_dir: str, token_dir: str, saved_count
 ):
-    """Process a batch of text inputs and save results.
+    """Save audio and tokens to disk.
     
     Args:
-        processors: A list of processors to use for the batch.
-        batch: A batch of text inputs.
-        audio_dir: The directory to save audio files.
-        token_dir: The directory to save token files.
-        pbar: A tqdm progress bar to update.
-        failed_indices: A list to collect indices of failed processing attempts.
+        queue (Queue): The queue containing the audio tokens.
+        audio_dir (str): The directory to save the audio.
+        token_dir (str): The directory to save the tokens.
+        total_examples (int): The total number of examples.
     """
-    tasks = []
-    for item, processor in zip(batch, processors):
-        task = asyncio.create_task(
-            process_and_save(processor, item, audio_dir, token_dir, failed_indices)
-        )
-        tasks.append(task)
+    while True:
+        audio_token = queue.get()
+        if audio_token is None:
+            break
 
-    await asyncio.gather(*tasks)
-    pbar.update(len(batch))
+        index = audio_token["index"]
+        audio = audio_token["audio"]
+        tokens = audio_token["tokens"]
+        logger.info(f"Saving index {index} to {audio_dir} and {token_dir}")
+
+        audio_path = os.path.join(audio_dir, f"audio_{index}.wav")
+        token_path = os.path.join(token_dir, f"{index}.pt")
+
+        torchaudio.save(audio_path, audio, 24_000)
+        torch.save(tokens, token_path)
+        with saved_count.get_lock():
+            saved_count.value += 1
 
 
-async def run_multi_works(
-    gpu_ids: List[int],
+def run_pipeline(
     dataset: Dataset,
-    audio_dir: str = "./new_audio",
-    token_dir: str = "./new_tokens",
-    failed_indices_file: str = "./failed_indices.json",
-    num_procs_per_gpu: int = 7,
+    devices: List[str] = ["cuda:0"],
+    num_procs_per_device: int = 5,
+    audio_dir: str = "./audio",
+    token_dir: str = "./tokens",
 ):
-    """Run multiple workers to process a dataset across multiple GPUs.
+    """Run the pipeline to convert text to audio and tokenize the audio.
     
     Args:
-        gpu_ids: A list of GPU IDs to use for processing.
-        dataset: The dataset to process.
-        audio_dir: The directory to save audio files.
-        token_dir: The directory to save token files.
-        failed_indices_file: The file to save the failed indices.
-        num_procs_per_gpu: The number of processors to use per GPU.
+        dataset (Dataset): The dataset to process.
+        devices (List[str], optional): The devices to use for processing. Defaults to ["cuda:0"].
+        num_procs_per_device (int, optional): The number of processes per device. Defaults to 8.
+        audio_dir (str, optional): The directory to save the audio. Defaults to "./audio".
+        token_dir (str, optional): The directory to save the tokens. Defaults to "./tokens".
     """
     os.makedirs(audio_dir, exist_ok=True)
     os.makedirs(token_dir, exist_ok=True)
 
-    processors = [
-        CombinedTTSTokenizer(device=f"cuda:{gpu_id}")
-        for gpu_id in gpu_ids
-        for _ in range(num_procs_per_gpu)
-    ]
-    total_samples = len(dataset)
-    total_processors = len(processors)
-    failed_indices = []
+    num_processes = len(devices) * num_procs_per_device
+    chunk_size = ceil(len(dataset) / num_processes)
+    chunks = []
+    for i in range(0, len(dataset), chunk_size):
+        if i + chunk_size <= len(dataset):
+            chunks.append(dataset.select(range(i, i + chunk_size)))
+        else:
+            chunks.append(dataset.select(range(i, len(dataset))))
 
-    async with tqdm(total=total_samples, desc="Processing samples") as pbar:
-        for i in range(0, total_samples, total_processors):
-            batch = dataset.select(range(i, i + total_processors))
-            await process_batch(
-                processors[: len(batch)],  # Use only as many processors as needed
-                batch,
-                audio_dir,
-                token_dir,
-                pbar,
-                failed_indices,
-            )
+    queue = Queue()
+    saved_count = Value('i', 0)
+    save_process = Process(
+        target=save_audio_tokens, args=(queue, audio_dir, token_dir, saved_count)
+    )
+    save_process.start()
 
-    await save_failed_indices(failed_indices, failed_indices_file)
-    logging.info("Processing completed.")
-    logging.info(f"Failed indices saved to {failed_indices_file}")
+    with tqdm(total=len(dataset), position=0) as pbar:
+        with ProcessPoolExecutor(max_workers=num_processes) as executor:
+            futures = []    
+            for i, chunk in enumerate(chunks):
+                device = devices[i % len(devices)]
+                for example in chunk:
+                    text = example["prompt"]
+                    index = example["index"]
+                    future = executor.submit(process_text, text, index, device)
+                    futures.append(future)
+
+            for future in as_completed(futures):
+                result = future.result()
+                pbar.update(1)
+                pbar.set_postfix({'Saved': saved_count.value}, refresh=True)
+                if result is not None:
+                    queue.put(result)
+
+    queue.put(None)
+    save_process.join()
 
 
 if __name__ == "__main__":
-    gpu_ids = [0, 1]  # Adjust based on available GPUs
-    dataset = Dataset.from_dict(
-        {"prompt": ["Hello world"] * 1000, "index": list(range(1000))}
-    )
-
-    asyncio.run(run_multi_works(gpu_ids, dataset))
+    dataset = load_dataset("jan-hq/instruction-speech-v1.5", split="train")
+    run_pipeline(dataset.select(range(100)))

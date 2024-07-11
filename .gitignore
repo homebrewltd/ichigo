@@ -1,5 +1,6 @@
 .trunk
-**/__pycache__/
+__pycache__
 **/*.pyc
 .vscode
 ruff.toml
+synthetic_data
