@@ -2,7 +2,7 @@ from whisperspeech.pipeline import Pipeline
 
 
 class TTSProcessor:
-    def __init__(self, device: str = "cuda:0"):
+    def __init__(self, device: str):
         """Initialize the TTS Processor with a specified device."""
         self.pipe = Pipeline(
             s2a_ref="collabora/whisperspeech:s2a-q4-tiny-en+pl.model", device=device

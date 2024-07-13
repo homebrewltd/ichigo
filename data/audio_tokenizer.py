@@ -6,7 +6,7 @@ from encodec.utils import convert_audio
 
 
 class AudioTokenizer:
-    def __init__(self, device: str = "cuda:0"):
+    def __init__(self, device: str):
         """Initialize the Audio Tokenizer with a specified device."""
         self.model = EncodecModel.encodec_model_24khz()
         self.model.set_target_bandwidth(1.5)
