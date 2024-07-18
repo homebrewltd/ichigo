@@ -12,13 +12,9 @@ import multiprocessing
 from datasets import load_dataset
 from transformers import AutoConfig
 
-from Adam_mini import Adam_mini
-
-
 def print_once(message):
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(message)
-
 
 num_cores = multiprocessing.cpu_count()
 print_once(f"Number of CPU cores: {num_cores}")
@@ -33,7 +29,6 @@ model = AutoModelForCausalLM.from_pretrained(
     attn_implementation="flash_attention_2",
     use_cache=False,
 )
-
 
 # Tokenizer loading
 print_once("--- Load Tokenizer ---")
@@ -132,7 +127,14 @@ trainer = SFTTrainer(
         report_to="tensorboard",
         max_grad_norm=1,
         optim="adamw_torch_fused",
-        lr_scheduler_type="cosine"
+        lr_scheduler_type="cosine",
+        adam_beta1=0.9,
+        adam_beta2=0.98,
+        adam_epsilon=1e-6,
+        hub_model_id="jan-hq/Jan-Llama3-0719",
+        push_to_hub=True,
+        dataloader_num_workers=16,
+        hub_token = "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",
     ),
 )
 
