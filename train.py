@@ -134,7 +134,6 @@ trainer = SFTTrainer(
         hub_model_id="jan-hq/Jan-Llama3-0719",
         push_to_hub=True,
         dataloader_num_workers=16,
-        hub_token = "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",
     ),
 )
 
