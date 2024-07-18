@@ -84,7 +84,6 @@ def training_step_calc(
     total_steps = steps_per_epoch * num_epochs
     return total_steps
 
-
 training_steps = training_step_calc(
     dataset=dataset_train,
     batch_size=per_device_train_batch_size,
@@ -133,7 +132,6 @@ trainer = SFTTrainer(
         adam_epsilon=1e-6,
         hub_model_id="jan-hq/Jan-Llama3-0719",
         push_to_hub=True,
-        dataloader_num_workers=16,
     ),
 )
 
