@@ -3,7 +3,7 @@
 ## Clone
 
 ```
-git clone --single-branch --branch training_script https://github.com/janhq/sound_instruct_llama3
+git clone --single-branch --branch training_script https://github.com/janhq/llama3-s.git
 ```
 
 ## Install
@@ -27,6 +27,6 @@ huggingface-cli login --token=<token>
 ## Training
 ```
 export CUTLASS_PATH="cutlass"
-export CUDA_VISIBLE_DEVICES=0,1,2,3
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 accelerate launch --config_file ./accelerate_config.yaml train.py 
 ```
