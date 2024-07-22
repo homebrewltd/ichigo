@@ -1,0 +1,41 @@
+# Model and tokenizer configuration
+model:
+  path: "jan-hq/llama-3-sound-init"
+  dtype: "bfloat16"
+  attn_implementation: "flash_attention_2"
+
+# Dataset configuration
+dataset:
+  name: "jan-hq/instruction-speech-conversation-interleaved"
+  split: "train"
+
+# Training configuration
+training:
+  per_device_train_batch_size: 3
+  num_train_epochs: 1
+  gradient_accumulation_steps: 4
+  max_seq_length: 4096
+  packing: false
+
+# Optimizer configuration
+optimizer:
+  learning_rate: 5.0e-5
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.98
+  epsilon: 1.0e-6
+
+# Training arguments
+training_args:
+  bf16: true
+  logging_steps: 1
+  save_strategy: "steps"
+  save_total_limit: 5
+  seed: 3407
+  output_dir: "outputs"
+  report_to: "tensorboard"
+  max_grad_norm: 1
+
+# Scheduler configuration
+scheduler:
+  warmup_ratio: 0.1
