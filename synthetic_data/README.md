@@ -125,47 +125,22 @@ The `AudioTokenizer` class uses EncodecModel to process audio waveforms into tok
 ```mermaid
 graph TD
     A[Load Dataset] --> B[Split into Chunks]
-    B --> C1[Process 1]
-    B --> C2[Process 2]
-    B --> C3[Process 3]
-    B --> C4[Process N]
+    B --> C[Process Chunk]
     
-    subgraph "Multiple Parallel Processes"
-    C1 --> D1[Text to Speech Conversion]
-    C2 --> D2[Text to Speech Conversion]
-    C3 --> D3[Text to Speech Conversion]
-    C4 --> D4[Text to Speech Conversion]
-    
-    D1 --> E1[Audio Tokenization]
-    D2 --> E2[Audio Tokenization]
-    D3 --> E3[Audio Tokenization]
-    D4 --> E4[Audio Tokenization]
-    
-    E1 --> F1[Save to CSV]
-    E2 --> F2[Save to CSV]
-    E3 --> F3[Save to CSV]
-    E4 --> F4[Save to CSV]
-    
-    C1 --> G1[Error Handling]
-    C2 --> G2[Error Handling]
-    C3 --> G3[Error Handling]
-    C4 --> G4[Error Handling]
-    
-    G1 -->|Retry| D1
-    G2 -->|Retry| D2
-    G3 -->|Retry| D3
-    G4 -->|Retry| D4
-    
-    G1 -->|Max Retries Exceeded| H1[Log Failed Indices]
-    G2 -->|Max Retries Exceeded| H2[Log Failed Indices]
-    G3 -->|Max Retries Exceeded| H3[Log Failed Indices]
-    G4 -->|Max Retries Exceeded| H4[Log Failed Indices]
+    subgraph PROC ["Process x N"]
+        C --> D[Text to Speech Conversion]
+        D --> E[Audio Tokenization]
+        E --> F[Save to CSV]
+        C --> G[Error Handling]
+        G -->|Retry| D
+        G -->|Max Retries Exceeded| H[Log Failed Indices]
     end
     
-    F1 --> I[Combine Results]
-    F2 --> I
-    F3 --> I
-    F4 --> I
+    F --> I[Combine Results]
+    H --> J[Aggregate Failed Indices]
+
+    classDef PROC padding-left:23em;
+    class PROC PROC;
 ```
 
 ## 10. Acknowledgements
