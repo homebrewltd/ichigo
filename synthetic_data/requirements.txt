@@ -3,3 +3,4 @@ pyarrow
 datasets
 encodec
 WhisperSpeech
+boto3
