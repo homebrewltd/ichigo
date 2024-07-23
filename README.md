@@ -12,12 +12,13 @@ The framework supports continual training of Meta's Llama3 models with an extend
 - [Models](#models)
 - [Dataset](#dataset)
 - [Synthetic Generation](#https://github.com/janhq/llama3-s/blob/main/synthetic_data/synthetic.md)
-- [Organizing](#organize-the-inputoutput-directory)
+- [Folder Structure Organize](#organize-the-inputoutput-directory)
 - [Training with HF Trainer](#training-with-hf-trainer)
 - [Training with Torchtune](#training-with-torchtune)
 
 ## Models:
 
+We provide both our fully finetuned models on Phase 1 and 2 data. For detailed instructions on how to use these models, please refer to the guidelines provided in the Hugging Face link:
 | Date       | HF Checkpoint                                   | Tokens | Step | Loss |
 |------------|-------------------------------------------------|--------|------|--------------- |
 | 📅 2023-12-11 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/jan-hq/Jan-Llama3s-cp-6520-intermediate) | 🔢 1.35B | 🔄 1195k | 📉 1.7-1.8 |
@@ -26,6 +27,7 @@ The framework supports continual training of Meta's Llama3 models with an extend
 
 ## Dataset
 
+We provide 3 different version of the processed data for model training, converted to the Llama3 format and ready for fine-tuning:
 | Date       | HF Checkpoint                                   | Tokens | 
 |------------|-------------------------------------------------|--------|
 | 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/PY007/TinyLlama-1.1B-Chat-v0.1) | 🔢 1.35B | 
@@ -126,6 +128,7 @@ tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B
   journal={arXiv preprint arXiv:2210.13438},
   year={2022}
 }
+
 ```
 ## Acknowledgement
 
