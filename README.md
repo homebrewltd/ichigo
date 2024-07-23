@@ -29,7 +29,7 @@ We are continuously working to expand these capabilities.
 ## Contents
 - [Models](#models)
 - [Dataset](#dataset)
-- [Synthetic Generation](#https://github.com/janhq/llama3-s/blob/main/synthetic_data/README.md)
+- [Synthetic Generation](https://github.com/homebrewltd/llama3-s/blob/main/synthetic_data/README.md)
 - [Folder Structure Organize](#organize-the-inputoutput-directory)
 - [Training with HF Trainer](#training-with-hf-trainer)
 - [Training with Torchtune](#training-with-torchtune)
