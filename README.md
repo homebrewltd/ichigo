@@ -1,13 +1,31 @@
 <div align="center">
 
-# Official repo for "Llama3-S: A Speech Multimodal Model That Natively Understanding Audio and Text Input"
+# Repository for "Llama3-S: A Speech Multimodal Model That Natively Understanding Audio and Text Input"
 <a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
-  <img src="images/llama3S.webp" width="180"/>
+  <img src="images/llama-listen.jpg" width="180"/>
+  <p><small>Image source: <a href="https://www.amazon.co.uk/When-Llama-Learns-Listen-Feelings/dp/1839237988">"When Llama Learns to Listen"</a></small></p>
 </div>
 
-The framework supports continual training of Meta's Llama3 models with an extended vocabulary that includes unique sound tokens, enabling the model to natively understand audio. Furthermore, we provide the codebase for synthetic single-turn sound instruction data, derived from a variety of high-quality text-only sources such as Open Hermes,...
+## Introduction
+Llama3-s is an open research project by [HomebrewLtd](https://homebrew.ltd/) aimed at training a Large Language Model (LLM) that natively understands audio input. Inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818), it employs an early fusion model, enabling native audio comprehension. Our approach, focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
+
+The project provides a full codebase and replication instructions for synthetic data creation and training.
+
+⚠️ Work in Progress
+Llama3-s is currently under active development. Please note the following limitations:
+
+- The model currently responds only to female voices
+- It processes single-turn sound instruction data
+
+We are continuously working to expand these capabilities.
+
+## News
+- [2024/07/19] We released Llama3-S-Phase-2, trained on 1.35B tokens. This model achieves a loss of 1.0.
+- [2024/07/01] We released Llama3-S-Phase-1, trained on 700M tokens. This model achieves a loss of 1.7.
+- [2024/06/23] We released Llama3-S-Init, our initialized model with expanded vocabulary.
+
 ## Contents
 - [Models](#models)
 - [Dataset](#dataset)
