@@ -123,12 +123,12 @@ tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B
 }
 
 @misc{defossez2022highfi,
-  title={High Fidelity Neural Audio Compression},
-  author={Défossez, Alexandre and Copet, Jade and Synnaeve, Gabriel and Adi, Yossi},
-  year={2022},
-  eprint={2210.13438},
-  archivePrefix={arXiv},
-  journal={arXiv preprint}
+      title={High Fidelity Neural Audio Compression},
+      author={Défossez, Alexandre and Copet, Jade and Synnaeve, Gabriel and Adi, Yossi},
+      year={2022},
+      eprint={2210.13438},
+      archivePrefix={arXiv},
+      journal={arXiv preprint}
 }
 ```
 ## Acknowledgement
