@@ -1,8 +1,8 @@
 <div align="center">
 
 # Official repo for "Llama3-S: A Speech Multimodal Model That Natively Understanding Audio and Text Input"
-<a href='https://huggingface.co/collections/jan-hq/jan-llama3-668e4dad446c8736208dca4f'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
-<a href='https://huggingface.co/collections/jan-hq/jan-llama3-668e4dad446c8736208dca4f'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
+<a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
+<a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
   <img src="images/llama3S.webp" width="180"/>
 </div>
@@ -16,14 +16,21 @@ The framework supports continual training of Meta's Llama3 models with an extend
 - [Training with HF Trainer](#training-with-hf-trainer)
 - [Training with Torchtune](#training-with-torchtune)
 
+## Quickstart with Google Colab
+
+Get started quickly using our Google Colab notebook:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VW_saWuNnOrl_nYCVksqqHpJmPQsyOOM?usp=sharing)
+
+
 ## Models:
 
-We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab. For detailed instructions on how to use these models, please refer to the guidelines provided in the Hugging Face link:
-| Date       | HF Checkpoint                                   | Tokens | Step | Loss |
-|------------|-------------------------------------------------|--------|------|--------------- |
-| 📅 2023-07-19 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/jan-hq/Jan-Llama3s-cp-6520-intermediate) | 🔢 1.35B | 🔄 1195k | 📉 1.7-1.8 |
-| 📅 2024-07-01 | 🔗 [Llama3-S-Phase-1](homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 📉 1.0 |
-| 📅 2024-06-23 | 🔗 [Llama3-S-Init](https://huggingface.co/homebrew-research/llama3-s-init) | 🔢 0M | 🔄 Null | 📉 Null |
+We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
+| Date       | HF Checkpoint                                   | Tokens | Step | Batch Size | Loss |
+|------------|-------------------------------------------------|--------|------|--------------- |---------------|
+| 📅 2023-07-19 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/homebrew-research/llama3-s-0719) | 🔢 1.35B | 🔄 1195k | 128 | 📉 1.7-1.8 |
+| 📅 2024-07-01 | 🔗 [Llama3-S-Phase-1](https://huggingface.co/homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 128 | 📉 1.0 |
+| 📅 2024-06-23 | 🔗 [Llama3-S-Init](https://huggingface.co/homebrew-research/llama3-s-init) | 🔢 0M | 🔄 Null | Null | 📉 Null |
 
 
 ## Dataset
@@ -32,8 +39,8 @@ We provide 3 different version of the processed data for model training, convert
 | Date       | HF Checkpoint                                   | Tokens | 
 |------------|-------------------------------------------------|--------|
 | 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/PY007/TinyLlama-1.1B-Chat-v0.1) | 🔢 1.35B | 
-| 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/PY007/TinyLlama-1.1B-Chat-v0.3) | 🔢 800M |
-| 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v0.4) | 🔢 450M |
+| 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 🔢 800M |
+| 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1) | 🔢 450M |
 
 ## Synthetic Generation
 
