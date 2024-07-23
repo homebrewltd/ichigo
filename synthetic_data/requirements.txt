@@ -1,0 +1,5 @@
+torch
+pyarrow
+datasets
+encodec
+WhisperSpeech
