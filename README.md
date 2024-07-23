@@ -22,9 +22,9 @@ Llama3-s is currently under active development. Please note the following limita
 We are continuously working to expand these capabilities.
 
 ## News
-- [2024/07/19] We released Llama3-S-Phase-2, trained on 1.35B tokens. This model achieves a loss of 1.0.
-- [2024/07/01] We released Llama3-S-Phase-1, trained on 700M tokens. This model achieves a loss of 1.7.
-- [2024/06/23] We released Llama3-S-Init, our initialized model with expanded vocabulary.
+- [2024/07/19] We released [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19), trained on 1.35B tokens. This model achieves a loss of 1.0.
+- [2024/07/01] We released [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), trained on 700M tokens. This model achieves a loss of 1.7.
+- [2024/06/23] We released [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), our initialized model with expanded vocabulary.
 
 ## Contents
 - [Models](#models)
@@ -46,9 +46,9 @@ Get started quickly using our Google Colab notebook:
 We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
 | Date | Checkpoint | Tokens | Step | Batch Size | Loss | Status |
 |------|------------|--------|------|------------|------|--------|
-| 📅 2024-07-19 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/homebrew-research/llama3-s-0719) | 🔢 1.35B | 🔄 1195k | 💼 128 | 📉 1.0| 🚧 In progress |
-| 📅 2024-07-01 | 🔗 [Llama3-S-Phase-1](https://huggingface.co/homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 💼 128 | 📉 1.7-1.8  | 🚧 In progress |
-| 📅 2024-06-23 | 🔗 [Llama3-S-Init](https://huggingface.co/homebrew-research/llama3-s-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
+| 📅 2024-07-19 | 🔗 [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | 🔢 1.35B | 🔄 1195k | 💼 128 | 📉 1.0| 🚧 In progress |
+| 📅 2024-07-01 | 🔗 [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | 🔢 700M | 🔄 1431k | 💼 128 | 📉 1.7-1.8  | 🚧 In progress |
+| 📅 2024-06-23 | 🔗 [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
 
 ## Dataset
 
@@ -62,6 +62,7 @@ We provide 3 different version of the processed data for model training, convert
 ## Synthetic Generation
 
 For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/README.md).
+
 ## Organize the input/output directory 
 1. First Clone the Repo from github:
 ```
