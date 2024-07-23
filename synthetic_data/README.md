@@ -25,14 +25,14 @@ However, as WhisperSpeech and Encodec do not support batch processing, this pipe
 - Sufficient RAM to handle large datasets
 - Fast storage for input/output operations
 
-### 3.2 Software
+### 3.2 Dependencies
 
 - torch
 - pyarrow
 - datasets
 - WhisperSpeech
 - encodec
-- Other dependencies listed in `requirements.txt`
+- Dependencies listed in `requirements.txt`
 
 ## 4. Installation
 
