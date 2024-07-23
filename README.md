@@ -1,13 +1,36 @@
-# Official repo for "Llama3-S: A Speech Multimodal Model That Natively Understanding Audio and Text Input
+<div align="center">
+
+# Official repo for "Llama3-S: A Speech Multimodal Model That Natively Understanding Audio and Text Input"
 <a href='https://huggingface.co/collections/jan-hq/jan-llama3-668e4dad446c8736208dca4f'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/collections/jan-hq/jan-llama3-668e4dad446c8736208dca4f'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
+  <img src="images/llama3S.webp" width="180"/>
+</div>
+
 The framework supports continual training of Meta's Llama3 models with an extended vocabulary that includes unique sound tokens, enabling the model to natively understand audio. Furthermore, we provide the codebase for synthetic single-turn sound instruction data, derived from a variety of high-quality text-only sources such as Open Hermes,...
 ## Contents
-- [Synthetic Generation](#https://github.com/janhq/llama3-s/tree/main/synthetic_data/synthetic.md)
+- [Models](#models)
+- [Dataset](#dataset)
+- [Synthetic Generation](#https://github.com/janhq/llama3-s/blob/main/synthetic_data/synthetic.md)
 - [Organizing](#organize-the-inputoutput-directory)
 - [Training with HF Trainer](#training-with-hf-trainer)
 - [Training with Torchtune](#training-with-torchtune)
+
+## Models:
+
+| Date       | HF Checkpoint                                   | Tokens | Step | Loss |
+|------------|-------------------------------------------------|--------|------|--------------- |
+| 📅 2023-12-11 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/jan-hq/Jan-Llama3s-cp-6520-intermediate) | 🔢 1.35B | 🔄 1195k | 📉 1.7-1.8 |
+| 📅 2024-12-28 | 🔗 [Llama3-S-Phase-1](homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 📉 1.0 |
+
+
+## Dataset
+
+| Date       | HF Checkpoint                                   | Tokens | 
+|------------|-------------------------------------------------|--------|
+| 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/PY007/TinyLlama-1.1B-Chat-v0.1) | 🔢 1.35B | 
+| 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/PY007/TinyLlama-1.1B-Chat-v0.3) | 🔢 800M |
+| 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v0.4) | 🔢 450M |
 
 ## Synthetic Generation
 
@@ -95,6 +118,13 @@ tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B
       archivePrefix={arXiv},
       primaryClass={cs.LG},
       url={https://arxiv.org/abs/2406.16793}, 
+}
+
+@article{defossez2022highfi,
+  title={High Fidelity Neural Audio Compression},
+  author={Défossez, Alexandre and Copet, Jade and Synnaeve, Gabriel and Adi, Yossi},
+  journal={arXiv preprint arXiv:2210.13438},
+  year={2022}
 }
 ```
 ## Acknowledgement
