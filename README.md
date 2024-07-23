@@ -109,7 +109,7 @@ tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B
       eprint={2405.09818},
       archivePrefix={arXiv},
       primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2405.09818}, 
+      journal={arXiv preprint}
 }
 
 @misc{zhang2024adamminiusefewerlearning,
@@ -119,16 +119,17 @@ tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B
       eprint={2406.16793},
       archivePrefix={arXiv},
       primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2406.16793}, 
+      journal={arXiv preprint}
 }
 
-@article{defossez2022highfi,
+@misc{defossez2022highfi,
   title={High Fidelity Neural Audio Compression},
   author={Défossez, Alexandre and Copet, Jade and Synnaeve, Gabriel and Adi, Yossi},
-  journal={arXiv preprint arXiv:2210.13438},
-  year={2022}
+  year={2022},
+  eprint={2210.13438},
+  archivePrefix={arXiv},
+  journal={arXiv preprint}
 }
-
 ```
 ## Acknowledgement
 
