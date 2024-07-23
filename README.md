@@ -11,18 +11,19 @@ The framework supports continual training of Meta's Llama3 models with an extend
 ## Contents
 - [Models](#models)
 - [Dataset](#dataset)
-- [Synthetic Generation](#https://github.com/janhq/llama3-s/blob/main/synthetic_data/synthetic.md)
+- [Synthetic Generation](#https://github.com/janhq/llama3-s/blob/main/synthetic_data/README.md)
 - [Folder Structure Organize](#organize-the-inputoutput-directory)
 - [Training with HF Trainer](#training-with-hf-trainer)
 - [Training with Torchtune](#training-with-torchtune)
 
 ## Models:
 
-We provide both our fully finetuned models on Phase 1 and 2 data. For detailed instructions on how to use these models, please refer to the guidelines provided in the Hugging Face link:
+We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab. For detailed instructions on how to use these models, please refer to the guidelines provided in the Hugging Face link:
 | Date       | HF Checkpoint                                   | Tokens | Step | Loss |
 |------------|-------------------------------------------------|--------|------|--------------- |
-| 📅 2023-12-11 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/jan-hq/Jan-Llama3s-cp-6520-intermediate) | 🔢 1.35B | 🔄 1195k | 📉 1.7-1.8 |
-| 📅 2024-12-28 | 🔗 [Llama3-S-Phase-1](homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 📉 1.0 |
+| 📅 2023-07-19 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/jan-hq/Jan-Llama3s-cp-6520-intermediate) | 🔢 1.35B | 🔄 1195k | 📉 1.7-1.8 |
+| 📅 2024-07-01 | 🔗 [Llama3-S-Phase-1](homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 📉 1.0 |
+| 📅 2024-06-23 | 🔗 [Llama3-S-Init](https://huggingface.co/homebrew-research/llama3-s-init) | 🔢 0M | 🔄 Null | 📉 Null |
 
 
 ## Dataset
@@ -36,7 +37,7 @@ We provide 3 different version of the processed data for model training, convert
 
 ## Synthetic Generation
 
-For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/synthetic.md).
+For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/README.md).
 ## Organize the input/output directory 
 1. First Clone the Repo from github:
 ```
