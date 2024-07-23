@@ -26,19 +26,18 @@ Get started quickly using our Google Colab notebook:
 ## Models:
 
 We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
-| Date       | HF Checkpoint                                   | Tokens | Step | Batch Size | Loss |
-|------------|-------------------------------------------------|--------|------|--------------- |---------------|
-| 📅 2023-07-19 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/homebrew-research/llama3-s-0719) | 🔢 1.35B | 🔄 1195k | 128 | 📉 1.7-1.8 |
-| 📅 2024-07-01 | 🔗 [Llama3-S-Phase-1](https://huggingface.co/homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 128 | 📉 1.0 |
-| 📅 2024-06-23 | 🔗 [Llama3-S-Init](https://huggingface.co/homebrew-research/llama3-s-init) | 🔢 0M | 🔄 Null | Null | 📉 Null |
-
+| Date | Checkpoint | Tokens | Step | Batch Size | Loss | Status |
+|------|------------|--------|------|------------|------|--------|
+| 📅 2024-07-19 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/homebrew-research/llama3-s-0719) | 🔢 1.35B | 🔄 1195k | 💼 128 | 📉 1.7-1.8 | 🚧 In progress |
+| 📅 2024-07-01 | 🔗 [Llama3-S-Phase-1](https://huggingface.co/homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 💼 128 | 📉 1.0 | 🚧 In progress |
+| 📅 2024-06-23 | 🔗 [Llama3-S-Init](https://huggingface.co/homebrew-research/llama3-s-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
 
 ## Dataset
 
 We provide 3 different version of the processed data for model training, converted to the Llama3 format and ready for fine-tuning:
 | Date       | HF Checkpoint                                   | Tokens | 
 |------------|-------------------------------------------------|--------|
-| 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/PY007/TinyLlama-1.1B-Chat-v0.1) | 🔢 1.35B | 
+| 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/homebrew-research) | 🔢 1.35B | 
 | 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 🔢 800M |
 | 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1) | 🔢 450M |
 
