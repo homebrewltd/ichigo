@@ -3,8 +3,8 @@
 ## 1. Introduction
 
 The Synthetic Data Pipeline is designed to process large raw-text dataset into trainable sound. This pipeline leverages:
-- First, WhisperSpeech to convert text into speech.
-- Second, Encodec to convert into trainable sound tokens.
+- First, [WhisperSpeech](https://github.com/collabora/WhisperSpeech) to convert text into speech.
+- Second, [Encodec](https://github.com/facebookresearch/encodec) to convert into trainable sound tokens.
 
 However, as WhisperSpeech and Encodec do not support batch processing, this pipeline is designed to process data in parallel across multiple GPUs in multiple processes.
 
