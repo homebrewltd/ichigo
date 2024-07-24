@@ -156,8 +156,19 @@ tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B
       archivePrefix={arXiv},
       journal={arXiv preprint}
 }
+
+@misc{WhisperSpeech,
+      title={WhisperSpeech: An Open Source Text-to-Speech System Built by Inverting Whisper}, 
+      author={Collabora and LAION},
+      year={2024},
+      url={https://github.com/collabora/WhisperSpeech},
+      note={GitHub repository}
+}
 ```
 ## Acknowledgement
 
 - [Torchtune](https://github.com/pytorch/torchtune): The codebase we built upon
+- [Accelerate](https://github.com/huggingface/accelerate): Library for easy use of distributed training
+- [WhisperSpeech](https://github.com/collabora/WhisperSpeech): Text-to-speech model for synthetic audio generation 
+- [Encodec](https://github.com/facebookresearch/encodec): High-fidelity neural audio codec for efficient audio compression
 - [Llama3](https://huggingface.co/collections/meta-llama/meta-llama-3-66214712577ca38149ebb2b6): the Family of Models that we based on that has the amazing language capabilities !!!
