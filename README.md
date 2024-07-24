@@ -1,17 +1,35 @@
 <div align="center">
 
-# Official repo for "Llama3-S: A Speech Multimodal Model That Natively Understanding Audio and Text Input"
+# Repository for "Llama3-S: A Speech Multimodal Model That Natively Understanding Audio and Text Input"
 <a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
-  <img src="images/llama3S.webp" width="180"/>
+  <img src="images/llama-listen.jpg" width="180"/>
+  <p><small>Image source: <a href="https://www.amazon.co.uk/When-Llama-Learns-Listen-Feelings/dp/1839237988">"When Llama Learns to Listen"</a></small></p>
 </div>
 
-The framework supports continual training of Meta's Llama3 models with an extended vocabulary that includes unique sound tokens, enabling the model to natively understand audio. Furthermore, we provide the codebase for synthetic single-turn sound instruction data, derived from a variety of high-quality text-only sources such as Open Hermes,...
+## Introduction
+Llama3-s is an open research project by [HomebrewLtd](https://homebrew.ltd/) aimed at training a Large Language Model (LLM) that natively understands audio input. Inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818), it employs an early fusion model, enabling native audio comprehension. Our approach, focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
+
+The project provides a full codebase and replication instructions for synthetic data creation and training.
+
+⚠️ Work in Progress
+Llama3-s is currently under active development. Please note the following limitations:
+
+- The model currently responds only to female voices
+- It processes single-turn sound instruction data
+
+We are continuously working to expand these capabilities.
+
+## News
+- [2024/07/19] We released [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19), trained on 1.35B tokens. This model achieves a loss of 1.0.
+- [2024/07/01] We released [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), trained on 700M tokens. This model achieves a loss of 1.7.
+- [2024/06/23] We released [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), our initialized model with expanded vocabulary.
+
 ## Contents
 - [Models](#models)
 - [Dataset](#dataset)
-- [Synthetic Generation](#https://github.com/janhq/llama3-s/blob/main/synthetic_data/README.md)
+- [Synthetic Generation](https://github.com/homebrewltd/llama3-s/blob/main/synthetic_data/README.md)
 - [Folder Structure Organize](#organize-the-inputoutput-directory)
 - [Training with HF Trainer](#training-with-hf-trainer)
 - [Training with Torchtune](#training-with-torchtune)
@@ -26,25 +44,25 @@ Get started quickly using our Google Colab notebook:
 ## Models:
 
 We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
-| Date       | HF Checkpoint                                   | Tokens | Step | Batch Size | Loss |
-|------------|-------------------------------------------------|--------|------|--------------- |---------------|
-| 📅 2023-07-19 | 🔗 [Llama3-S-Phase-2](https://huggingface.co/homebrew-research/llama3-s-0719) | 🔢 1.35B | 🔄 1195k | 128 | 📉 1.7-1.8 |
-| 📅 2024-07-01 | 🔗 [Llama3-S-Phase-1](https://huggingface.co/homebrew-research/llama3-s-0708) | 🔢 700M | 🔄 1431k | 128 | 📉 1.0 |
-| 📅 2024-06-23 | 🔗 [Llama3-S-Init](https://huggingface.co/homebrew-research/llama3-s-init) | 🔢 0M | 🔄 Null | Null | 📉 Null |
-
+| Date | Checkpoint | Tokens | Step | Batch Size | Loss | Status |
+|------|------------|--------|------|------------|------|--------|
+| 📅 2024-07-19 | 🔗 [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | 🔢 1.35B | 🔄 1195k | 💼 128 | 📉 1.0| 🚧 In progress |
+| 📅 2024-07-01 | 🔗 [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | 🔢 700M | 🔄 1431k | 💼 128 | 📉 1.7-1.8  | 🚧 In progress |
+| 📅 2024-06-23 | 🔗 [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
 
 ## Dataset
 
 We provide 3 different version of the processed data for model training, converted to the Llama3 format and ready for fine-tuning:
 | Date       | HF Checkpoint                                   | Tokens | 
 |------------|-------------------------------------------------|--------|
-| 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/PY007/TinyLlama-1.1B-Chat-v0.1) | 🔢 1.35B | 
+| 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/homebrew-research) | 🔢 1.35B | 
 | 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 🔢 800M |
 | 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1) | 🔢 450M |
 
 ## Synthetic Generation
 
 For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/README.md).
+
 ## Organize the input/output directory 
 1. First Clone the Repo from github:
 ```

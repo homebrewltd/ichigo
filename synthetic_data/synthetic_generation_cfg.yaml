@@ -1,0 +1,22 @@
+# Dataset configuration
+dataset:
+  name: "jan-hq/prompt-voice-v1.5"                        # Dataset name from Hugging Face
+  split: "train"                                          # Dataset split to use
+  remaining_indices_file:                                 # File to store remaining indices (List[int])
+
+# Processing configuration
+processing:
+  do_test: true                                           # Whether to run the test
+  devices: ["cuda:0", "cuda:1", "cuda:2", "cuda:3"]       # List of GPUs to use
+  num_procs_per_device: 14                                # Number of processes per GPU
+  save_dir: "./outputs"                                   # Directory to save processed data
+  save_batch_size: 50                                     # Batch size for saving processed data for each process
+  max_retries: 3                                          # Maximum number of retries for processing a sample
+  sample_rate: 24000                                      # Sample rate for audio data    
+
+
+# Logging configuration
+logging:
+  log_file: "pipeline.log"                                # Log file name
+  console_level: "INFO"                                   # Console log level
+  file_level: "DEBUG"                                     # File log level  
