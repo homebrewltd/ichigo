@@ -1,6 +1,6 @@
 <div align="center">
 
-# Repository for "Llama3-S: A Speech Multimodal Model That Natively Understanding Audio and Text Input"
+# Llama3-S: When llama learns to listen
 <a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
