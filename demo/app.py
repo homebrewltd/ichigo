@@ -101,7 +101,7 @@ iface = gr.Interface(
         gr.Textbox(label="Generated Text", interactive=False),
         gr.Button("Stop Generation")
     ],
-    title="Llama3-S: Sound-to-Text",
+    title="Llama3-S: A Speech Multimodal Model from Homebrew",
     description="Record or upload a .wav file to generate text based on its content.",
     examples=[
         ["./examples/codeapythonscript.wav"],
