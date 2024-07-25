@@ -33,8 +33,7 @@ def setup_pipeline(model_path, use_4bit=False, use_8bit=False):
     if use_8bit:
         model_kwargs["quantization_config"] = BitsAndBytesConfig(
             load_in_8bit=True,
-            bnb_8bit_compute_dtype=torch.bfloat16,
-            bnb_8bit_use_double_quant=True,
+            llm_int8_enable_fp32_cpu_offload=True,
         )
     else:
         model_kwargs["torch_dtype"] = torch.bfloat16
@@ -91,16 +90,15 @@ def process_audio(audio_file):
         if tokenizer.eos_token in partial_message:
             break
         yield partial_message
-
+# def stop_generation():
+#     # This is a placeholder. Implement actual stopping logic here if needed.
+#     return "Generation stopped.", gr.Button.update(interactive=False)
 iface = gr.Interface(
     fn=process_audio,
     inputs=[
         gr.Audio(sources=["microphone", "upload"], type="filepath", label="Record or upload audio")
     ],
-    outputs=[
-        gr.Textbox(label="Generated Text", interactive=False),
-        gr.Button("Stop Generation")
-    ],
+    outputs="text",
     title="Llama3-S: A Speech Multimodal Model from Homebrew",
     description="Record or upload a .wav file to generate text based on its content.",
     examples=[
@@ -108,4 +106,5 @@ iface = gr.Interface(
         ["./examples/story.wav"],
     ]
 )
+# iface.load(stop_generation, None, gr.Button("Stop Generation"), queue=False)
 iface.launch(share=True)
