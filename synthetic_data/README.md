@@ -80,6 +80,7 @@ processing:
   max_retries: # Maximum number of retries for processing a sample
   sample_rate: # Sample rate for audio data
   speaker: # Speaker class to use for speech generation
+  format: # Format for saving processed data
 
 test_mode: # Whether to run the test
 test:
@@ -111,6 +112,11 @@ There are currently 3 supported speakers for text-to-speech conversion:
 - default_speaker
 - speaker_5304
 
+### 6.2 Format
+
+There are currently 2 supported speakers for text-to-speech conversion:
+- parquet
+- csv
 
 ## 7. Usage
 
@@ -119,17 +125,16 @@ There are currently 3 supported speakers for text-to-speech conversion:
 To run the full pipeline:
 
 ```python
-python synthetic_data_pipeline.py
+python synthetic_data_pipeline.py --config_file synthetic_generation_cfg.yaml
 ```
 
 ### 7.2 Test Mode
 
-To run the pipeline in test mode with a smaller dataset. modify the `do_test` parameter in the configuration file:
+To run the pipeline in test mode with a smaller dataset. modify the `test_mode` parameter in the configuration file:
 
-```
+```yaml
 ...
-processing:
-    do_test: true
+test_mode: true
 ...
 ```
 

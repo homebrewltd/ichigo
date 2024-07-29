@@ -8,14 +8,14 @@ import warnings
 import time
 from multiprocessing import Process, Value
 
+import fire
 import torch
 import pyarrow as pa
-
 from datasets import Dataset, load_dataset
 
 from audio_tokenizer import AudioTokenizer
 from tts_processor import TTSProcessor
-from csv_writer import CSVWriter, save_batch
+from writer import Writer, save_batch
 from utils import (
     configure_logging,
     upload_folder_to_s3,
@@ -38,6 +38,7 @@ def process_and_save_text(
     sample_rate: int,
     max_retries: int,
     speaker,
+    format,
 ):
     """Process the text and save the audio tokens to a CSV file.
 
@@ -50,8 +51,10 @@ def process_and_save_text(
         save_batch_size (int): The batch size to save to the CSV file.
         sample_rate (int): The sample rate for the audio.
         max_retries (int): The maximum number of retries for processing an item.
+        speaker (str): The speaker to use for the TTS.
+        format (str): The format of the audio file.
     """
-    logger.info("Process %s will process %s examples.", process_id, len(subset))
+    logger.debug("Process %s will process %s examples.", process_id, len(subset))
     batch_prompt = subset["prompt"]
     batch_index = subset["index"]
     tts_processor = TTSProcessor(device=device)
@@ -65,15 +68,15 @@ def process_and_save_text(
             pa.field("tokens", pa.string()),
         ]
     )
-    csv_file_path = os.path.join(save_dir, f"audio_tokens_{process_id}.csv")
-    csv_writer = CSVWriter(csv_file_path, schema)
-    logger.info("Process %s will save to %s.", process_id, csv_file_path)
+    file_path = os.path.join(save_dir, f"audio_tokens_{process_id}")
+    writer = Writer(file_path, schema, format)
+    logger.debug("Process %s will save to %s.", process_id, file_path)
 
     failed_indices = []
     saved_failed_indice_path = os.path.join(
         save_dir, f"failed_indices_{process_id}.json"
     )
-    logger.info(
+    logger.debug(
         "Process %s will save failed indices to %s.",
         process_id,
         saved_failed_indice_path,
@@ -81,7 +84,7 @@ def process_and_save_text(
 
     batch = []
     for text, index in zip(batch_prompt, batch_index):
-        logger.info("Process %s processing item sample %s.", process_id, index)
+        logger.debug("Process %s processing item sample %s.", process_id, index)
         for attempt in range(max_retries):
             try:
                 audio = tts_processor.convert_text_to_audio(text, speaker)
@@ -97,7 +100,7 @@ def process_and_save_text(
                 )
 
                 if len(batch) >= save_batch_size:
-                    save_batch(batch, csv_writer)
+                    save_batch(batch, writer)
                     batch = []
                     save_failed_indices(failed_indices, saved_failed_indice_path)
                     failed_indices = []
@@ -115,13 +118,13 @@ def process_and_save_text(
 
     # Save any remaining items in the batch
     if batch:
-        logger.info("Saving progress.")
-        save_batch(batch, csv_writer)
+        logger.debug("Saving progress.")
+        save_batch(batch, writer)
     if failed_indices:
         logger.info("Saving failed samples.")
         save_failed_indices(failed_indices, saved_failed_indice_path)
 
-    csv_writer.close()
+    writer.close()
 
 
 def run_pipeline(
@@ -148,6 +151,7 @@ def run_pipeline(
         sample_rate,
         max_retries,
         speaker,
+        format,
     ) = (
         config[key]
         for key in [
@@ -158,6 +162,7 @@ def run_pipeline(
             "sample_rate",
             "max_retries",
             "speaker",
+            "format",
         ]
     )
 
@@ -171,8 +176,6 @@ def run_pipeline(
 
     # Split the dataset into non-overlapping chunks
     chunks = create_non_overlapping_chunks(dataset, num_workers)
-    total_items = sum(len(chunk) for chunk in chunks)
-    logger.info("Total items in chunks: %s", total_items)
 
     processed_count = Value("i", 0)  # Value to store the number of items processed
 
@@ -192,6 +195,7 @@ def run_pipeline(
                 sample_rate,
                 max_retries,
                 speaker,
+                format,
             ),
         )
         p.start()
@@ -212,8 +216,14 @@ def run_pipeline(
     logger.info("Final processed count: %s", processed_count.value)
 
 
-if __name__ == "__main__":
-    config = load_config("./synthetic_generation_cfg.yaml")
+def main(config_path: str = "./synthetic_generation_cfg.yaml"):
+    """Run the pipeline to convert text to audio and tokenize the audio.
+
+    Args:
+        config_path (str): The path to the configuration file."""
+    config = load_config(config_path)
+    global logger
+
     logger = configure_logging(config)
 
     dataset = load_dataset(
@@ -240,8 +250,6 @@ if __name__ == "__main__":
     else:
         logger.info("Process FULL samples from %s", config["dataset"]["name"])
 
-
-
     run_pipeline(dataset, pipeline_config)
 
     if config["upload_to_s3"]:
@@ -250,4 +258,9 @@ if __name__ == "__main__":
             config["s3"]["save_dir"],
             config["s3"]["bucket_name"],
             config["s3"]["s3_folder"],
+            config["s3"]["num_processes"],
         )
+
+
+if __name__ == "__main__":
+    fire.Fire(main)

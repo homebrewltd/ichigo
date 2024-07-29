@@ -2,6 +2,7 @@ import os
 import logging
 from math import ceil
 from multiprocessing import Pool
+from logging.handlers import RotatingFileHandler
 
 import boto3
 import yaml
@@ -88,7 +89,11 @@ def configure_logging(config: dict):
 
     # Create file handler if log_file is specified
     if config["logging"]["log_file"]:
-        file_handler = logging.FileHandler(config["logging"]["log_file"])
+        file_handler = RotatingFileHandler(
+            config["logging"]["log_file"],
+            maxBytes=1000000,
+            backupCount=3
+        )
         file_handler.setLevel(config["logging"]["file_level"])
         file_handler.setFormatter(logging.Formatter(log_format, date_format))
         logger.addHandler(file_handler)
