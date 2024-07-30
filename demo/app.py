@@ -11,6 +11,7 @@ import os
 from generate_audio import (
     TTSProcessor,
 )  
+import uuid
 
 def audio_to_sound_tokens(audio_path, target_bandwidth=1.5, device="cuda"):
     model = EncodecModel.encodec_model_24khz()
@@ -48,9 +49,11 @@ llm_path = "homebrewltd/llama3-s-2024-07-19"
 pipe = setup_pipeline(llm_path, use_8bit=False)
 tokenizer = pipe.tokenizer
 model = pipe.model
-print(tokenizer.encode("/s", add_special_tokens=False))# return the audio tensor
+# print(tokenizer.encode("/s", add_special_tokens=False))# return the audio tensor
 def text_to_audio_file(text):
-    temp_file = "temp_audio.wav"
+    # gen a random id for the audio file
+    id = str(uuid.uuid4())
+    temp_file = f"./user_audio/{id}_temp_audio.wav"
     text = text
     text_split = "_".join(text.lower().split(" "))  
     # remove the last character if it is a period
@@ -62,14 +65,14 @@ def text_to_audio_file(text):
     print(f"Saved audio to {temp_file}")
     return temp_file
 def process_input(input_type, text_input=None, audio_file=None):
-    if input_type == "text":
-        audio_file = "temp_audio.wav"
+    # if input_type == "text":
+    #     audio_file = "temp_audio.wav"
     
     for partial_message in process_audio(audio_file):
         yield partial_message
     
-    if input_type == "text":
-        os.remove(audio_file) 
+    # if input_type == "text":
+    #     os.remove(audio_file) 
 
 class StopOnTokens(StoppingCriteria):
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
@@ -160,13 +163,13 @@ examples.extend(bad_examples)
 # iface.launch(server_name="127.0.0.1", server_port=8080)
 with gr.Blocks() as iface:
     gr.Markdown("# Llama3-S: checkpoint july 19, 2024")
-    gr.Markdown("Enter text to convert to audio, then submit the audio to generate text.")
+    gr.Markdown("Enter text to convert to audio, then submit the audio to generate text or Upload Audio")
     
     with gr.Row():
         input_type = gr.Radio(["text", "audio"], label="Input Type", value="audio")
         text_input = gr.Textbox(label="Text Input", visible=False)
-        audio_input = gr.Audio(label="Upload Audio", type="filepath", visible=True)
-        audio_output = gr.Audio(label="Converted Audio", type="filepath", visible=False)
+        audio_input = gr.Audio(label="Audio", type="filepath", visible=True)
+        # audio_output = gr.Audio(label="Converted Audio", type="filepath", visible=False)
     
     convert_button = gr.Button("Convert to Audio", visible=False)
     submit_button = gr.Button("Submit for Processing")
@@ -175,24 +178,27 @@ with gr.Blocks() as iface:
     
     def update_visibility(input_type):
         return (gr.update(visible=input_type == "text"), 
-                gr.update(visible=input_type == "audio"), 
-                gr.update(visible=input_type == "text"), 
                 gr.update(visible=input_type == "text"))
     def convert_and_display(text):
         audio_file = text_to_audio_file(text)
         return audio_file
     def process_example(file_path):
         return update_visibility("audio") 
+    # input_type.change(
+    #     update_visibility,
+    #     inputs=[input_type],
+    #     outputs=[text_input, audio_input, audio_output, convert_button]
+    # )
     input_type.change(
         update_visibility,
         inputs=[input_type],
-        outputs=[text_input, audio_input, audio_output, convert_button]
+        outputs=[text_input, convert_button]
     )
 
     convert_button.click(
         convert_and_display,
         inputs=[text_input],
-        outputs=[audio_output]
+        outputs=[audio_input]
     )
     
     submit_button.click(
@@ -202,5 +208,5 @@ with gr.Blocks() as iface:
     )
     
     gr.Examples(examples, inputs=[audio_input], outputs=[audio_input], fn=process_example)
-
+iface.queue(max_size=10)
 iface.launch(server_name="127.0.0.1", server_port=8080)
