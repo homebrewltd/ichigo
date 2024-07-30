@@ -8,6 +8,10 @@ from transformers import StoppingCriteria, StoppingCriteriaList, TextIteratorStr
 from threading import Thread
 import logging
 import os
+from generate_audio import (
+    TTSProcessor,
+)  
+import uuid
 
 def audio_to_sound_tokens(audio_path, target_bandwidth=1.5, device="cuda"):
     model = EncodecModel.encodec_model_24khz()
@@ -33,26 +37,50 @@ def setup_pipeline(model_path, use_4bit=False, use_8bit=False):
     if use_8bit:
         model_kwargs["quantization_config"] = BitsAndBytesConfig(
             load_in_8bit=True,
-            llm_int8_enable_fp32_cpu_offload=True,
+            # llm_int8_enable_fp32_cpu_offload=True,
         )
     else:
         model_kwargs["torch_dtype"] = torch.bfloat16
     model = AutoModelForCausalLM.from_pretrained(model_path, **model_kwargs)
     return pipeline("text-generation", model=model, tokenizer=tokenizer)
 
+tts = TTSProcessor("cuda")
+llm_path = "homebrewltd/llama3-s-2024-07-19"
+pipe = setup_pipeline(llm_path, use_8bit=False)
+tokenizer = pipe.tokenizer
+model = pipe.model
+# print(tokenizer.encode("/s", add_special_tokens=False))# return the audio tensor
+def text_to_audio_file(text):
+    # gen a random id for the audio file
+    id = str(uuid.uuid4())
+    temp_file = f"./user_audio/{id}_temp_audio.wav"
+    text = text
+    text_split = "_".join(text.lower().split(" "))  
+    # remove the last character if it is a period
+    if text_split[-1] == ".":
+        text_split = text_split[:-1]
+    tts.convert_text_to_audio_file(text, temp_file)
+    # logging.info(f"Saving audio to {temp_file}")
+    # torchaudio.save(temp_file, audio.cpu(), sample_rate=24000)
+    print(f"Saved audio to {temp_file}")
+    return temp_file
+def process_input(input_type, text_input=None, audio_file=None):
+    # if input_type == "text":
+    #     audio_file = "temp_audio.wav"
+    
+    for partial_message in process_audio(audio_file):
+        yield partial_message
+    
+    # if input_type == "text":
+    #     os.remove(audio_file) 
+
 class StopOnTokens(StoppingCriteria):
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
-        stop_ids = [2]  # Adjust this based on your model's tokenizer
+        stop_ids = [tokenizer.eos_token_id]  # Adjust this based on your model's tokenizer
         for stop_id in stop_ids:
             if input_ids[0][-1] == stop_id:
                 return True
         return False
-
-llm_path = "homebrewltd/llama3-s-2024-07-19"
-pipe = setup_pipeline(llm_path, use_8bit=True)
-tokenizer = pipe.tokenizer
-model = pipe.model
-
 def process_audio(audio_file):
     if audio_file is None:
             raise ValueError("No audio file provided")
@@ -71,13 +99,12 @@ def process_audio(audio_file):
     input_ids = tokenizer.encode(tokenizer.apply_chat_template(messages, tokenize=False), return_tensors="pt")
     input_ids = input_ids.to(model.device)
 
-    streamer = TextIteratorStreamer(tokenizer, timeout=10., skip_prompt=True, skip_special_tokens=True)
+    streamer = TextIteratorStreamer(tokenizer, timeout=10., skip_prompt=True, skip_special_tokens=True)  
     generation_kwargs = dict(
         input_ids=input_ids,
         streamer=streamer,
-        max_new_tokens=1024,
-        do_sample=True,
-        temperature=0.1,
+        max_new_tokens=200,
+        do_sample=False,
         stopping_criteria=StoppingCriteriaList([stop])
     )
 
@@ -89,22 +116,97 @@ def process_audio(audio_file):
         partial_message += new_token
         if tokenizer.eos_token in partial_message:
             break
+        partial_message = partial_message.replace("assistant\n\n", "")
         yield partial_message
 # def stop_generation():
 #     # This is a placeholder. Implement actual stopping logic here if needed.
 #     return "Generation stopped.", gr.Button.update(interactive=False)
-iface = gr.Interface(
-    fn=process_audio,
-    inputs=[
-        gr.Audio(sources=["microphone", "upload"], type="filepath", label="Record or upload audio")
-    ],
-    outputs="text",
-    title="Llama3-S: A Speech Multimodal Model from Homebrew",
-    description="Record or upload a .wav file to generate text based on its content.",
-    examples=[
-        ["./examples/codeapythonscript.wav"],
-        ["./examples/story.wav"],
-    ]
-)
-# iface.load(stop_generation, None, gr.Button("Stop Generation"), queue=False)
-iface.launch(share=True)
+# take all the examples from the examples folder
+good_examples = []
+for file in os.listdir("./examples"):
+    if file.endswith(".wav"):
+        good_examples.append([f"./examples/{file}"])
+bad_examples = []
+for file in os.listdir("./bad_examples"):
+    if file.endswith(".wav"):
+        bad_examples.append([f"./bad_examples/{file}"])
+examples = []
+examples.extend(good_examples)
+examples.extend(bad_examples)
+# with gr.Blocks() as iface:
+#     gr.Markdown("# Llama3-S: A Speech & Text Fusion Model Checkpoint from Homebrew")
+#     gr.Markdown("Enter text or upload a .wav file to generate text based on its content.")
+    
+#     with gr.Row():
+#         input_type = gr.Radio(["text", "audio"], label="Input Type", value="audio")
+#         text_input = gr.Textbox(label="Text Input", visible=False)
+#         audio_input = gr.Audio(sources=["upload"], type="filepath", label="Upload audio", visible=True)
+    
+#     output = gr.Textbox(label="Generated Text")
+    
+#     submit_button = gr.Button("Submit")
+    
+#     input_type.change(
+#         update_visibility,
+#         inputs=[input_type],
+#         outputs=[text_input, audio_input]
+#     )
+    
+#     submit_button.click(
+#         process_input,
+#         inputs=[input_type, text_input, audio_input],
+#         outputs=[output]
+#     )
+    
+#     gr.Examples(examples, inputs=[audio_input])
+
+# iface.launch(server_name="127.0.0.1", server_port=8080)
+with gr.Blocks() as iface:
+    gr.Markdown("# Llama3-S: checkpoint july 19, 2024")
+    gr.Markdown("Enter text to convert to audio, then submit the audio to generate text or Upload Audio")
+    
+    with gr.Row():
+        input_type = gr.Radio(["text", "audio"], label="Input Type", value="audio")
+        text_input = gr.Textbox(label="Text Input", visible=False)
+        audio_input = gr.Audio(label="Audio", type="filepath", visible=True)
+        # audio_output = gr.Audio(label="Converted Audio", type="filepath", visible=False)
+    
+    convert_button = gr.Button("Convert to Audio", visible=False)
+    submit_button = gr.Button("Submit for Processing")
+    
+    text_output = gr.Textbox(label="Generated Text")
+    
+    def update_visibility(input_type):
+        return (gr.update(visible=input_type == "text"), 
+                gr.update(visible=input_type == "text"))
+    def convert_and_display(text):
+        audio_file = text_to_audio_file(text)
+        return audio_file
+    def process_example(file_path):
+        return update_visibility("audio") 
+    # input_type.change(
+    #     update_visibility,
+    #     inputs=[input_type],
+    #     outputs=[text_input, audio_input, audio_output, convert_button]
+    # )
+    input_type.change(
+        update_visibility,
+        inputs=[input_type],
+        outputs=[text_input, convert_button]
+    )
+
+    convert_button.click(
+        convert_and_display,
+        inputs=[text_input],
+        outputs=[audio_input]
+    )
+    
+    submit_button.click(
+        process_input,
+        inputs=[input_type, text_input, audio_input],
+        outputs=[text_output]
+    )
+    
+    gr.Examples(examples, inputs=[audio_input], outputs=[audio_input], fn=process_example)
+iface.queue(max_size=10)
+iface.launch(server_name="127.0.0.1", server_port=8080)
