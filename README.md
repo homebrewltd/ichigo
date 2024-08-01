@@ -9,7 +9,7 @@
 </div>
 
 ## Introduction
-Llama3-s is an open research project by [HomebrewLtd](https://homebrew.ltd/) aimed at training a Large Language Model (LLM) that natively understands audio input. Inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818), it employs an early fusion model, enabling native audio comprehension. Our approach, focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
+Llama3-s is an open, ongoing research project by [Homebrew](https://homebrew.ltd/) to extend an a Large Language Model (LLM) that native understands audio input. Inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818), it employs an early fusion model, enabling native audio comprehension. Our approach, focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
 
 The project provides a full codebase and replication instructions for synthetic data creation and training.
 
@@ -46,8 +46,8 @@ Get started quickly using our Google Colab notebook:
 We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
 | Date | Checkpoint | Tokens | Step | Batch Size | Loss | Status |
 |------|------------|--------|------|------------|------|--------|
-| 📅 2024-07-19 | 🔗 [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | 🔢 1.35B | 🔄 1195k | 💼 128 | 📉 1.0| 🚧 In progress |
-| 📅 2024-07-01 | 🔗 [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | 🔢 700M | 🔄 1431k | 💼 128 | 📉 1.7-1.8  | 🚧 In progress |
+| 📅 2024-07-19 | 🔗 [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | 🔢 1.35B | 🔄 6520 | 💼 128 | 📉 1.0| 🚧 In progress |
+| 📅 2024-07-01 | 🔗 [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | 🔢 700M | 🔄 4320 | 💼 128 | 📉 1.7-1.8  | 🚧 In progress |
 | 📅 2024-06-23 | 🔗 [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
 
 ## Dataset

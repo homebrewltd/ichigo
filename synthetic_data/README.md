@@ -67,27 +67,56 @@ Edit the `synthetic_generation_cfg.yaml` file to configure the following paramet
 ```yaml
 # Dataset configuration
 dataset:
-  name:                                   # Dataset name from Hugging Face
-  split:                                  # Dataset split to use
-  remaining_indices_file:                 # File to store remaining indices (List[int])
+  name: # Dataset name from Hugging Face
+  split: # Dataset split to use
+  remaining_indices_file: # File to store remaining indices (List[int])
 
 # Processing configuration
 processing:
-  do_test:                                # Whether to run the test
-  devices:                                # List of GPUs to use
-  num_procs_per_device:                   # Number of processes per GPU
-  save_dir:                               # Directory to save processed data
-  save_batch_size:                        # Batch size for saving processed data for each process
-  max_retries:                            # Maximum number of retries for processing a sample
-  sample_rate:                            # Sample rate for audio data    
+  devices: # List of GPUs to use
+  num_procs_per_device: # Number of processes per GPU
+  save_dir: # Directory to save processed data
+  save_batch_size: # Batch size for saving processed data for each process
+  max_retries: # Maximum number of retries for processing a sample
+  sample_rate: # Sample rate for audio data
+  speaker: # Speaker class to use for speech generation
+  format: # Format for saving processed data
 
+test_mode: # Whether to run the test
+test:
+  num_samples: # Number of samples to process
+  devices: # List of GPUs to use
+  num_procs_per_device: # Number of processes per GPU
+  save_dir: # Directory to save processed data
+  save_batch_size: # Batch size for saving processed data for each process
+  max_retries: # Maximum number of retries for processing a sample
+  sample_rate: # Sample rate for audio data
+  speaker: # Speaker class to use for speech generation
 
 # Logging configuration
 logging:
-  log_file:                               # Log file name
-  console_level:                          # Console log level
-  file_level:                             # File log level  
+  log_file: # Log file name
+  console_level: # Console log level
+  file_level: # File log level
+
+upload_to_s3: # Whether to upload processed data to S3
+s3:
+  save_dir: # Directory to save processed data
+  bucket_name: # S3 bucket name
+  s3_folder: # S3 folder name
 ```
+
+### 6.1 Speaker
+
+There are currently 3 supported speakers for text-to-speech conversion:
+- default_speaker
+- speaker_5304
+
+### 6.2 Format
+
+There are currently 2 supported speakers for text-to-speech conversion:
+- parquet
+- csv
 
 ## 7. Usage
 
@@ -96,17 +125,16 @@ logging:
 To run the full pipeline:
 
 ```python
-python synthetic_data_pipeline.py
+python synthetic_data_pipeline.py --config_file synthetic_generation_cfg.yaml
 ```
 
 ### 7.2 Test Mode
 
-To run the pipeline in test mode with a smaller dataset. modify the `do_test` parameter in the configuration file:
+To run the pipeline in test mode with a smaller dataset. modify the `test_mode` parameter in the configuration file:
 
-```
+```yaml
 ...
-processing:
-    do_test: true
+test_mode: true
 ...
 ```
 
