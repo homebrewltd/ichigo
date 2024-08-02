@@ -29,11 +29,11 @@ llama3-s is being done as an open science experiment with an open source codebas
 - [`#research-livestream`](https://discord.com/invite/FTk2MvZwJH): see our training runs live
 
 ## Current Progress
-- 2 Aug: We re-trained phase 1 (not yet published) using llama3.1 with much better hyperparameters and techniques, leading to a significant improvement, almost no sign of degradation (0.66 -> 0.61 on MMLU).
-- 1 Aug: Discovered that the training on 1 July introduced a significant degradation to the base model (MMLU reduction from 0.6 -> 0.2) due to a typo in the original training recipe
-- 30 July: Presented llama3-s initial progress at: [AI Training: From PyTorch to GPU Clusters](https://lu.ma/ws8t6wom?tk=wZvFmm)
-- 19 July: [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) can understand a synthetically generated voice
-- 1 July: [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) intial exploratory training to see if the model can converge, it seems the loss is converging at 1.7 with limited data
+- 2 Aug: Retrained phase 1 with llama3.1, achieving significant improvement (MMLU: 0.66 -> 0.61)
+- 1 Aug: Identified typo in original training recipe, causing degradation (MMLU: 0.6 -> 0.2)
+- 30 July: Presented llama3-s progress at: [AI Training: From PyTorch to GPU Clusters](https://lu.ma/ws8t6wom?tk=wZvFmm)
+- 19 July: [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) understands synthetic voice
+- 1 July: [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) showed converging loss (1.7) with limited data
 
 ## Training Runs: 
 
