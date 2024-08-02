@@ -8,31 +8,26 @@
   <p><small>Image source: <a href="https://www.amazon.co.uk/When-Llama-Learns-Listen-Feelings/dp/1839237988">"When Llama Learns to Listen"</a></small></p>
 </div>
 
+> [!WARNING]  
+> llama3-s is an on-going research experiment, and is in its early traning runs. 
+> Join us in Discord to follow our progress, and contribute to research. 
+
+> [!INFO]  
+> UpModel is currently overfit to our synthetic voice dataset (i.e. female, Australian accent)
+> - Can only process single-sound instruction data
+
 ## Introduction
-Llama3-s is an open research project by [HomebrewLtd](https://homebrew.ltd/) aimed at training a Large Language Model (LLM) that natively understands audio input. Inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818), it employs an early fusion model, enabling native audio comprehension. Our approach, focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
+llama3-s is an open, ongoing research experiment by [Homebrew](https://homebrew.ltd/) to extend a text-based LLM to have native "listening" ability. 
 
-The project provides a full codebase and replication instructions for synthetic data creation and training.
+We are training an [early fusion](https://medium.com/@raj.pulapakura/multimodal-models-and-fusion-a-complete-guide-225ca91f6861#:~:text=3.3.,-Early%20Fusion&text=Early%20fusion%20refers%20to%20combining,fused%20representation%20through%20the%20model.) model using techniques inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818). Our approach is focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
 
-⚠️ Work in Progress
-Llama3-s is currently under active development. Please note the following limitations:
+llama3-s is being done as an open science experiment, with an open source codebase and dataset. We ~~build~~ train in public, and we stream our training runs in the `#research-livestream` in the [Homebrew Discord](https://discord.com/invite/FTk2MvZwJH) 📺
 
-- The model currently responds only to female voices
-- It processes single-turn sound instruction data
-
-We are continuously working to expand these capabilities.
 
 ## News
-- [2024/07/19] We released [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19), trained on 1.35B tokens. This model achieves a loss of 1.0.
-- [2024/07/01] We released [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), trained on 700M tokens. This model achieves a loss of 1.7.
+- [2024/07/19] [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19), trained on 1.35B tokens. This model achieves a loss of 1.0.
+- [2024/07/01] [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), trained on 700M tokens. This model achieves a loss of 1.7.
 - [2024/06/23] We released [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), our initialized model with expanded vocabulary.
-
-## Contents
-- [Models](#models)
-- [Dataset](#dataset)
-- [Synthetic Generation](https://github.com/homebrewltd/llama3-s/blob/main/synthetic_data/README.md)
-- [Folder Structure Organize](#organize-the-inputoutput-directory)
-- [Training with HF Trainer](#training-with-hf-trainer)
-- [Training with Torchtune](#training-with-torchtune)
 
 ## Quickstart with Google Colab
 
@@ -41,23 +36,24 @@ Get started quickly using our Google Colab notebook:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VW_saWuNnOrl_nYCVksqqHpJmPQsyOOM?usp=sharing)
 
 
-## Models:
+## Training Runs: 
 
 We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
-| Date | Checkpoint | Tokens | Step | Batch Size | Loss | Status |
-|------|------------|--------|------|------------|------|--------|
-| 📅 2024-07-19 | 🔗 [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | 🔢 1.35B | 🔄 1195k | 💼 128 | 📉 1.0| 🚧 In progress |
-| 📅 2024-07-01 | 🔗 [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | 🔢 700M | 🔄 1431k | 💼 128 | 📉 1.7-1.8  | 🚧 In progress |
-| 📅 2024-06-23 | 🔗 [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
+
+| Date           | Model Checkpoint                                                                  | Dataset    | Tokens    | Step      | Batch Size | Loss        | Status          |
+| -------------- | --------------------------------------------------------------------------------- | --- | --------- | --------- | ---------- | ----------- | --------------- |
+| 2024-07-19 | [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | [Instruction-Speech-Full](https://huggingface.co/homebrew-research)    | 1.35B | 1195k | 128    | 1.0     | In progress |
+| 2024-07-01 | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) |     | 700M  | 1431k | 128    | 1.7-1.8 | In progress |
+| 2024-06-23 | [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init)             |     | 0M    | N/A   | N/A    | N/A     | N/A             |
 
 ## Dataset
 
 We provide 3 different version of the processed data for model training, converted to the Llama3 format and ready for fine-tuning:
-| Date       | HF Checkpoint                                   | Tokens | 
-|------------|-------------------------------------------------|--------|
-| 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/homebrew-research) | 🔢 1.35B | 
-| 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 🔢 800M |
-| 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1) | 🔢 450M |
+| Date           | HF Checkpoint                                                                                               | Tokens    |
+| -------------- | ----------------------------------------------------------------------------------------------------------- | --------- |
+| 📅 2024-07-19 |                                    | 🔢 1.35B |
+| 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 🔢 800M  |
+| 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1)   | 🔢 450M  |
 
 ## Synthetic Generation
 
