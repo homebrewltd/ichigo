@@ -28,11 +28,12 @@ llama3-s is being done as an open science experiment with an open source codebas
 - [`#research`](https://discord.com/invite/FTk2MvZwJH) : for discussions, updates, and questions
 - [`#research-livestream`](https://discord.com/invite/FTk2MvZwJH): see our training runs live
 
-## Current Progress 
+## Current Progress
+- 2 Aug: We re-trained phase 1 (not yet published) using llama3.1 with much better hyperparameters and techniques, leading to a significant improvement, almost no sign of degradation (0.66 -> 0.61 on MMLU).
+- 1 Aug: Discovered that the training on 1 July introduced a significant degradation to the base model (MMLU reduction from 0.6 -> 0.2) due to a typo in the original training recipe
 - 30 July: Presented llama3-s initial progress at: [AI Training: From PyTorch to GPU Clusters](https://lu.ma/ws8t6wom?tk=wZvFmm)
 - 19 July: [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) can understand a synthetically generated voice
-- 1 July: [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), can... 
-- 23 Jun: [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), promising loss curve, etc 
+- 1 July: [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) intial exploratory training to see if the model can converge, it seems the loss is converging at 1.7 with limited data
 
 ## Training Runs: 
 
@@ -40,9 +41,8 @@ We provide our fully finetuned models on Phase 1 and 2 data and the initialized 
 
 | Date       | Model Checkpoint                                                              | Dataset                                                                                                 | Tokens | Step  | Batch Size | Loss    | Training Cost |
 | ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------ | ----- | ---------- | ------- | ------------- |
-|            |                                                                               |                                                                                                         |        |       |            |         |               |
-| 19 July 24 | [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | [Instruction-Speech-Full](https://huggingface.co/homebrew-research)                                     | 1.35B  | 1195k | 128        | 1.0     |               |
-| 1 July 24  | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 700M   | 1431k | 128        | 1.7-1.8 |               |
+| 19 July 24 | [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | [Instruction-Speech-Full](https://huggingface.co/homebrew-research)                                     | 1.35B  | 1195k | 128        | 1.0     |     ~300$     |
+| 1 July 24  | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 700M   | 1431k | 128        | 1.7-1.8 |     ~300$     |
 | 23 July 24 | [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init)             | [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1)   | 0M     | N/A   | N/A        | N/A     |               |
 
 ## Join Us
