@@ -9,7 +9,7 @@
 </div>
 
 > [!WARNING]  
-> llama3-s is an on-going open research experiment in its early traning runs. 
+> llama3-s is an on-going open research experiment in its early training runs. 
 > - Join us in the  `#research` channel in [Homebrew's Discord](https://discord.com/invite/FTk2MvZwJH)
 > - We livestream training runs in `#research-livestream`
 
