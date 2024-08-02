@@ -9,57 +9,57 @@
 </div>
 
 > [!WARNING]  
-> llama3-s is an on-going research experiment, and is in its early traning runs. 
-> Join us in Discord to follow our progress, and contribute to research. 
+> llama3-s is an on-going open research experiment in its early traning runs. 
+> - Join us in the  `#research` channel in [Homebrew's Discord](https://discord.com/invite/FTk2MvZwJH)
+> - We livestream training runs in `#research-livestream`
 
-> [!INFO]  
-> UpModel is currently overfit to our synthetic voice dataset (i.e. female, Australian accent)
+> [!NOTE]  
+> 2nd Aug 2024 Update: 
+> - llama3-s can understand female, Australian accents, i.e. our synthetic voice data generator 😂
 > - Can only process single-sound instruction data
+> - Current Demo: [https://dollars-scholar-wins-antique.trycloudflare.com/](https://dollars-scholar-wins-antique.trycloudflare.com/)
 
-## Introduction
-llama3-s is an open, ongoing research experiment by [Homebrew](https://homebrew.ltd/) to extend a text-based LLM to have native "listening" ability. 
+## About
+llama3-s is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. We are mainly  
 
 We are training an [early fusion](https://medium.com/@raj.pulapakura/multimodal-models-and-fusion-a-complete-guide-225ca91f6861#:~:text=3.3.,-Early%20Fusion&text=Early%20fusion%20refers%20to%20combining,fused%20representation%20through%20the%20model.) model using techniques inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818). Our approach is focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
 
-llama3-s is being done as an open science experiment, with an open source codebase and dataset. We ~~build~~ train in public, and we stream our training runs in the `#research-livestream` in the [Homebrew Discord](https://discord.com/invite/FTk2MvZwJH) 📺
+llama3-s is being done as an open science experiment with an open source codebase and dataset. We ~~build~~ train in public:
+- [`#research`](https://discord.com/invite/FTk2MvZwJH) : for discussions, updates, and questions
+- [`#research-livestream`](https://discord.com/invite/FTk2MvZwJH): see our training runs live
 
-
-## News
-- [2024/07/19] [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19), trained on 1.35B tokens. This model achieves a loss of 1.0.
-- [2024/07/01] [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), trained on 700M tokens. This model achieves a loss of 1.7.
-- [2024/06/23] We released [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), our initialized model with expanded vocabulary.
-
-## Quickstart with Google Colab
-
-Get started quickly using our Google Colab notebook:
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VW_saWuNnOrl_nYCVksqqHpJmPQsyOOM?usp=sharing)
-
+## Current Progress 
+- 30 July: Presented llama3-s initial progress at: [AI Training: From PyTorch to GPU Clusters](https://lu.ma/ws8t6wom?tk=wZvFmm)
+- 19 July: [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) can understand a synthetically generated voice
+- 1 July: [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), can... 
+- 23 Jun: [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), promising loss curve, etc 
 
 ## Training Runs: 
 
 We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
 
-| Date           | Model Checkpoint                                                                  | Dataset    | Tokens    | Step      | Batch Size | Loss        | Status          |
-| -------------- | --------------------------------------------------------------------------------- | --- | --------- | --------- | ---------- | ----------- | --------------- |
-| 2024-07-19 | [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | [Instruction-Speech-Full](https://huggingface.co/homebrew-research)    | 1.35B | 1195k | 128    | 1.0     | In progress |
-| 2024-07-01 | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) |     | 700M  | 1431k | 128    | 1.7-1.8 | In progress |
-| 2024-06-23 | [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init)             |     | 0M    | N/A   | N/A    | N/A     | N/A             |
+| Date       | Model Checkpoint                                                              | Dataset                                                                                                 | Tokens | Step  | Batch Size | Loss    | Training Cost |
+| ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------ | ----- | ---------- | ------- | ------------- |
+|            |                                                                               |                                                                                                         |        |       |            |         |               |
+| 19 July 24 | [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | [Instruction-Speech-Full](https://huggingface.co/homebrew-research)                                     | 1.35B  | 1195k | 128        | 1.0     |               |
+| 1 July 24  | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 700M   | 1431k | 128        | 1.7-1.8 |               |
+| 23 July 24 | [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init)             | [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1)   | 0M     | N/A   | N/A        | N/A     |               |
 
-## Dataset
+## Join Us
 
-We provide 3 different version of the processed data for model training, converted to the Llama3 format and ready for fine-tuning:
-| Date           | HF Checkpoint                                                                                               | Tokens    |
-| -------------- | ----------------------------------------------------------------------------------------------------------- | --------- |
-| 📅 2024-07-19 |                                    | 🔢 1.35B |
-| 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 🔢 800M  |
-| 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1)   | 🔢 450M  |
+llama3-s is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
 
-## Synthetic Generation
+### Quickstart with Google Colab
+
+Get started quickly using our Google Colab notebook:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VW_saWuNnOrl_nYCVksqqHpJmPQsyOOM?usp=sharing)
+
+###  Synthetic Generation
 
 For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/README.md).
 
-## Organize the input/output directory 
+### Organize the input/output directory 
 1. First Clone the Repo from github:
 ```
 git clone --single-branch --branch training_script https://github.com/janhq/llama3-s.git
@@ -77,7 +77,8 @@ llama3-s
 │   │   ├── Meta-Llama-3-70B-Instruct
 
 ```
-## Training with HF Trainer
+
+### Training with HF Trainer
 1. Install Depencencies
 ```
 python -m venv hf_trainer
@@ -100,7 +101,8 @@ export CUTLASS_PATH="cutlass"
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 accelerate launch --config_file ./accelerate_config.yaml train.py 
 ```
-## Training with Torchtune
+
+### Training with Torchtune
 1. Install Package
 ```
 python -m venv torchtune
@@ -122,7 +124,8 @@ nano torchtune/recipes/configs/jan-llama3-s/8B_full.yaml
 ```
 tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B_full
 ```
-## Reference
+
+## References
 ```bibtex
 @misc{chameleonteam2024chameleonmixedmodalearlyfusionfoundation,
       title={Chameleon: Mixed-Modal Early-Fusion Foundation Models}, 
