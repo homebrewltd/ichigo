@@ -79,7 +79,7 @@ llama3-s
 ```
 
 ### Training with HF Trainer
-1. Install Depencencies
+1. Install Dependencies
 ```
 python -m venv hf_trainer
 chmod +x scripts/install.sh
@@ -120,7 +120,7 @@ Setup the Dataset from HF path by change the path and change the name of the mod
 nano torchtune/recipes/configs/jan-llama3-s/8B_full.yaml
 ```
 
-2. Training Mutil GPU (1-8GPUs Supported)
+2. Training Multi GPU (1-8GPUs Supported)
 ```
 tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B_full
 ```
