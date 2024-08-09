@@ -62,7 +62,7 @@ For detailed information on synthetic generation, please refer to the [Synthetic
 ### Organize the input/output directory 
 1. First Clone the Repo from github:
 ```
-git clone --single-branch --branch training_script https://github.com/janhq/llama3-s.git
+git clone --recurse-submodules https://github.com/homebrewltd/llama3-s.git
 ```
 2. Organize the folder structure as follows before training:
 ```
