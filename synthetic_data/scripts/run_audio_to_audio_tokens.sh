@@ -1,0 +1,1 @@
+python audio_to_audio_tokens.py --config_path configs/audio_to_audio_tokens_cfg.yaml --test-mode True
