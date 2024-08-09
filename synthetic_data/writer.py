@@ -44,14 +44,10 @@ def save_batch(batch, writer):
         batch (List[dict]): The batch of data to save.
         writer (writer): The writer to use for saving the data
     """
-    # Create pa.array from the data
-    index_array = pa.array([item["index"] for item in batch], type=pa.int64())
-    audio_array = pa.array([item["audio"] for item in batch], type=pa.string())
-    tokens_array = pa.array([item["tokens"] for item in batch], type=pa.string())
+    arrays = []
+    schema = writer.schema
+    for name, type in zip(schema.names, schema.types):
+        arrays.append(pa.array([item[name] for item in batch], type=type))
 
-    # Create batch table
-    batch_table = pa.Table.from_arrays(
-        [index_array, audio_array, tokens_array], schema=writer.schema
-    )
-
+    batch_table = pa.Table.from_arrays(arrays, schema=writer.schema)
     writer.write(batch_table)
