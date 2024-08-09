@@ -1,69 +1,51 @@
+import os
 from typing import List, Tuple
 
 import torch
+import torchaudio
+from huggingface_hub import hf_hub_download
 from encodec import EncodecModel
 from encodec.utils import convert_audio
+from whisperspeech.vq_stoks import RQBottleneckTransformer
 
 
-def encode(
-    model: EncodecModel, audio: Tuple[torch.Tensor, int], device: str
-) -> List[int]:
-    """Encode audio into interleaved audio codes.
+class WhisperVQTokenizer:
+    def __init__(self, repo_id: str = "jan-hq/WhisperVQ", device: str = "cuda"):
+        """Initialize the Audio Tokenizer with a specified device."""
+        # Check if the model is downloaded
+        if not os.path.exists("whisper-vq-stoks-medium-en+pl-fixed.model"):
+            hf_hub_download(
+                repo_id=repo_id,
+                filename="whisper-vq-stoks-medium-en+pl-fixed.model",
+                local_dir=".",
+            )
+        self.device = device
+        self.vq_model = RQBottleneckTransformer.load_model(
+            "whisper-vq-stoks-medium-en+pl-fixed.model"
+        ).to(self.device)
+        self.vq_model.ensure_whisper(self.device)
 
-    Args:
-        model (EncodecModel): The EnCodec model.
-        audio (Tuple[torch.Tensor, int]): The audio waveform and sample rate.
-        device (str): The device to use.
-    Return:
-        List: The interleaved audio codes.
-    """
-    # Send model to device
-    model.to(device)
+    def encode(self, audio: Tuple[torch.Tensor, int]) -> List:
+        """Process a single audio file into interleaved audio codes.
 
-    # Load and pre-process the audio waveform
-    wav, sr = audio
-    wav = convert_audio(wav, sr, model.sample_rate, model.channels)
-    wav = wav.unsqueeze(0).to(device)
+        Args:
+            audio (Tuple[torch.Tensor, int]): The audio waveform and sample rate.
 
-    # Extract discrete codes from the EnCodec model
-    encoded_frames = model.encode(wav)
-    # Concatenate the encoded frames
-    codes = torch.cat([encoded[0] for encoded in encoded_frames], dim=-1)
+        Returns:
+            List: The interleaved audio codes.
+        """
+        # Load and pre-process the audio waveform
+        wav, sr = audio
+        if sr != 16000:
+            wav = torchaudio.functional.resample(wav, sr, 16000)
 
-    # Extract the first two sequences from the codes tensor
-    audio_code1, audio_code2 = codes[0][0], codes[0][1]
-
-    # Interleave the audio codes between low and high frequency bands
-    interleaved = torch.stack((audio_code1, audio_code2), dim=1).flatten()
-    return interleaved.tolist()
-
-
-def decode(
-    model: EncodecModel, audio_code: List, device: str
-) -> Tuple[torch.Tensor, int]:
-    """Decode interleaved audio codes into audio.
-
-    Args:
-        model (EncodecModel): The EnCodec model.
-        audio_code (List): The interleaved audio codes.
-        device (str): The device to use.
-    Return:
-        Tuple[torch.Tensor, int]: The decoded audio and sample rate.
-    """
-    # Send model to device
-    model.to(device)
-
-    # Convert the audio code to tensor and reshape
-    interleaved = torch.tensor(audio_code).view(-1, 2)
-    audio_code1, audio_code2 = interleaved[:, 0], interleaved[:, 1]
-    # Decode the audio code
-    codes = torch.stack((audio_code1, audio_code2), dim=0).unsqueeze(0).to(device)
-    decoded_audio = model.decoder(model.quantizer.decode(codes.transpose(0, 1)))
-    decoded_audio = decoded_audio.squeeze(0)
-    return decoded_audio, model.sample_rate
+        # Extract discrete codes
+        codes = self.vq_model.encode_audio(wav.to(self.device))
+        codes = codes[0].cpu().tolist()
+        return codes
 
 
-class AudioTokenizer:
+class EncodecTokenizer:
     def __init__(self, device: str):
         """Initialize the Audio Tokenizer with a specified device."""
         self.model = EncodecModel.encodec_model_24khz()
@@ -101,7 +83,7 @@ class AudioTokenizer:
             return None
 
     @torch.no_grad()
-    def process_single_audio(self, audio: Tuple[torch.Tensor, int]) -> List:
+    def encode(self, audio: Tuple[torch.Tensor, int]) -> List:
         """Process a single audio file into interleaved audio codes.
 
         Args:
