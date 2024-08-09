@@ -40,15 +40,15 @@ def process_and_save_text(
     speaker,
     format,
 ):
-    """Process the text and save the audio tokens to a CSV file.
+    """Process the text and save the audio tokens to a file.
 
     Args:
         subset (Dataset): The subset of the dataset to process.
         device (str): The device to use for processing.
         process_id (int): The ID of the process.
         processed_count (Value): The shared value to store the number of processed items.
-        save_dir (str): The directory to save the CSV file.
-        save_batch_size (int): The batch size to save to the CSV file.
+        save_dir (str): The directory to save the file.
+        save_batch_size (int): The batch size to save to the file.
         sample_rate (int): The sample rate for the audio.
         max_retries (int): The maximum number of retries for processing an item.
         speaker (str): The speaker to use for the TTS.
@@ -60,7 +60,7 @@ def process_and_save_text(
     tts_processor = TTSProcessor(device=device)
     audio_tokenizer = AudioTokenizer(device=device)
 
-    # Create a CSV writer for this process
+    # Create a writer for this process
     schema = pa.schema(
         [
             pa.field("index", pa.int64()),
@@ -137,8 +137,8 @@ def run_pipeline(
         dataset (Dataset): The dataset to process.
         devices (List): The list of devices to use for processing.
         num_procs_per_device (int): The number of processes to run on each device.
-        save_dir (str): The directory to save the CSV files.
-        save_batch_size (int): The batch size to save to the CSV files.
+        save_dir (str): The directory to save the files.
+        save_batch_size (int): The batch size to save to the files.
         sample_rate (int): The sample rate for the audio.
         max_retries (int): The maximum number of retries for processing an item."""
     print(config)
