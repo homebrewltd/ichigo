@@ -1,4 +1,3 @@
-torch
 torchvision
 torchaudio
 pyarrow
@@ -8,3 +7,7 @@ WhisperSpeech
 transformers
 soundfile
 gradio
+openai-whisper
+torch==2.4.0
+vector_quantize_pytorch
+webdataset

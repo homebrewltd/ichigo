@@ -2,6 +2,7 @@ import gradio as gr
 import torch
 import torchaudio
 from encodec import EncodecModel
+from whisperspeech.vq_stoks import RQBottleneckTransformer
 from encodec.utils import convert_audio
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, pipeline
 from transformers import StoppingCriteria, StoppingCriteriaList, TextIteratorStreamer
@@ -13,6 +14,35 @@ from generate_audio import (
 )  
 import uuid
 
+device = "cuda"
+vq_model = RQBottleneckTransformer.load_model(
+        "whisper-vq-stoks-medium-en+pl-fixed.model"
+    ).to(device)
+
+def audio_to_sound_tokens_whisperspeech(audio_path):
+    vq_model.ensure_whisper(device)
+    
+    wav, sr = torchaudio.load(audio_path)
+    if sr != 16000:
+        wav = torchaudio.functional.resample(wav, sr, 16000)
+    with torch.no_grad():
+        codes = vq_model.encode_audio(wav.to(device))
+        codes = codes[0].cpu().tolist()
+    
+    result = ''.join(f'<|sound_{num:04d}|>' for num in codes)
+    return f'<|sound_start|>{result}<|sound_end|>'
+def audio_to_sound_tokens_whisperspeech_transcribe(audio_path):
+    vq_model.ensure_whisper(device)
+    
+    wav, sr = torchaudio.load(audio_path)
+    if sr != 16000:
+        wav = torchaudio.functional.resample(wav, sr, 16000)
+    with torch.no_grad():
+        codes = vq_model.encode_audio(wav.to(device))
+        codes = codes[0].cpu().tolist()
+    
+    result = ''.join(f'<|sound_{num:04d}|>' for num in codes)
+    return f'<|reserved_special_token_69|><|sound_start|>{result}<|sound_end|>'
 def audio_to_sound_tokens(audio_path, target_bandwidth=1.5, device="cuda"):
     model = EncodecModel.encodec_model_24khz()
     model.set_target_bandwidth(target_bandwidth)
@@ -45,7 +75,7 @@ def setup_pipeline(model_path, use_4bit=False, use_8bit=False):
     return pipeline("text-generation", model=model, tokenizer=tokenizer)
 
 tts = TTSProcessor("cuda")
-llm_path = "homebrewltd/llama3-s-2024-07-19"
+llm_path = "homebrewltd/Llama3-1-s-instruct-version-1"
 pipe = setup_pipeline(llm_path, use_8bit=False)
 tokenizer = pipe.tokenizer
 model = pipe.model
@@ -73,7 +103,15 @@ def process_input(input_type, text_input=None, audio_file=None):
     
     # if input_type == "text":
     #     os.remove(audio_file) 
-
+def process_transcribe_input(input_type, text_input=None, audio_file=None):
+    # if input_type == "text":
+    #     audio_file = "temp_audio.wav"
+    
+    for partial_message in process_audio(audio_file, transcript=True):
+        yield partial_message
+    
+    # if input_type == "text":
+    #     os.remove(audio_file)
 class StopOnTokens(StoppingCriteria):
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
         stop_ids = [tokenizer.eos_token_id]  # Adjust this based on your model's tokenizer
@@ -81,14 +119,14 @@ class StopOnTokens(StoppingCriteria):
             if input_ids[0][-1] == stop_id:
                 return True
         return False
-def process_audio(audio_file):
+def process_audio(audio_file, transcript=False):
     if audio_file is None:
             raise ValueError("No audio file provided")
 
     logging.info(f"Audio file received: {audio_file}")
     logging.info(f"Audio file type: {type(audio_file)}")
 
-    sound_tokens = audio_to_sound_tokens(audio_file)
+    sound_tokens = audio_to_sound_tokens_whisperspeech_transcribe(audio_file)  if transcript else audio_to_sound_tokens_whisperspeech(audio_file)
     logging.info("Sound tokens generated successfully")
     # logging.info(f"audio_file: {audio_file.name}")
     messages = [
@@ -162,7 +200,7 @@ examples.extend(bad_examples)
 
 # iface.launch(server_name="127.0.0.1", server_port=8080)
 with gr.Blocks() as iface:
-    gr.Markdown("# Llama3-S: checkpoint july 19, 2024")
+    gr.Markdown("# Llama3-1-S: checkpoint Aug 15, 2024")
     gr.Markdown("Enter text to convert to audio, then submit the audio to generate text or Upload Audio")
     
     with gr.Row():
@@ -173,6 +211,7 @@ with gr.Blocks() as iface:
     
     convert_button = gr.Button("Convert to Audio", visible=False)
     submit_button = gr.Button("Submit for Processing")
+    transcrip_button = gr.Button("Please Transcribe the audio for me")
     
     text_output = gr.Textbox(label="Generated Text")
     
@@ -203,6 +242,11 @@ with gr.Blocks() as iface:
     
     submit_button.click(
         process_input,
+        inputs=[input_type, text_input, audio_input],
+        outputs=[text_output]
+    )
+    transcrip_button.click(
+        process_transcribe_input,
         inputs=[input_type, text_input, audio_input],
         outputs=[text_output]
     )
