@@ -1,0 +1,14 @@
+openai-whisper
+fastcore
+fastprogress
+huggingface_hub
+matplotlib
+numpy
+pandas
+torch==2.4.0
+torchaudio==2.4.0
+transformers
+vector_quantize_pytorch
+vllm
+webdataset
+whisperspeech
