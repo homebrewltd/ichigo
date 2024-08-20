@@ -12,3 +12,4 @@ vector_quantize_pytorch
 vllm
 webdataset
 whisperspeech
+huggingface_hub

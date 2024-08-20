@@ -18,6 +18,7 @@ device = "cuda"
 vq_model = RQBottleneckTransformer.load_model(
         "whisper-vq-stoks-medium-en+pl-fixed.model"
     ).to(device)
+# vq_model.ensure_whisper(device)
 
 def audio_to_sound_tokens_whisperspeech(audio_path):
     vq_model.ensure_whisper(device)
@@ -67,7 +68,8 @@ def setup_pipeline(model_path, use_4bit=False, use_8bit=False):
     if use_8bit:
         model_kwargs["quantization_config"] = BitsAndBytesConfig(
             load_in_8bit=True,
-            # llm_int8_enable_fp32_cpu_offload=True,
+            llm_int8_enable_fp32_cpu_offload=False,
+            llm_int8_has_fp16_weight=False,
         )
     else:
         model_kwargs["torch_dtype"] = torch.bfloat16
@@ -75,11 +77,12 @@ def setup_pipeline(model_path, use_4bit=False, use_8bit=False):
     return pipeline("text-generation", model=model, tokenizer=tokenizer)
 
 tts = TTSProcessor("cuda")
-llm_path = "homebrewltd/Llama3-1-s-instruct-version-1"
+llm_path = "homebrewltd/Llama3.1-s-instruct-2024-08-19-epoch-3"
 pipe = setup_pipeline(llm_path, use_8bit=False)
 tokenizer = pipe.tokenizer
 model = pipe.model
-# print(tokenizer.encode("/s", add_special_tokens=False))# return the audio tensor
+# print(tokenizer.encode("<|sound_0001|>", add_special_tokens=False))# return the audio tensor
+# print(tokenizer.eos_token)
 def text_to_audio_file(text):
     # gen a random id for the audio file
     id = str(uuid.uuid4())
@@ -114,6 +117,7 @@ def process_transcribe_input(input_type, text_input=None, audio_file=None):
     #     os.remove(audio_file)
 class StopOnTokens(StoppingCriteria):
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
+        # encode </s> token
         stop_ids = [tokenizer.eos_token_id]  # Adjust this based on your model's tokenizer
         for stop_id in stop_ids:
             if input_ids[0][-1] == stop_id:
@@ -141,7 +145,7 @@ def process_audio(audio_file, transcript=False):
     generation_kwargs = dict(
         input_ids=input_ids,
         streamer=streamer,
-        max_new_tokens=200,
+        max_new_tokens=1024,
         do_sample=False,
         stopping_criteria=StoppingCriteriaList([stop])
     )
@@ -253,4 +257,6 @@ with gr.Blocks() as iface:
     
     gr.Examples(examples, inputs=[audio_input], outputs=[audio_input], fn=process_example)
 iface.queue(max_size=10)
-iface.launch(server_name="127.0.0.1", server_port=8080)
+# iface.launch(server_name="127.0.0.1", server_port=8080)
+# launch locally
+iface.launch(server_name="0.0.0.0")
