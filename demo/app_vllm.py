@@ -174,34 +174,7 @@ for file in os.listdir("./bad_examples"):
 examples = []
 examples.extend(good_examples)
 examples.extend(bad_examples)
-# with gr.Blocks() as iface:
-#     gr.Markdown("# Llama3-S: A Speech & Text Fusion Model Checkpoint from Homebrew")
-#     gr.Markdown("Enter text or upload a .wav file to generate text based on its content.")
-    
-#     with gr.Row():
-#         input_type = gr.Radio(["text", "audio"], label="Input Type", value="audio")
-#         text_input = gr.Textbox(label="Text Input", visible=False)
-#         audio_input = gr.Audio(sources=["upload"], type="filepath", label="Upload audio", visible=True)
-    
-#     output = gr.Textbox(label="Generated Text")
-    
-#     submit_button = gr.Button("Submit")
-    
-#     input_type.change(
-#         update_visibility,
-#         inputs=[input_type],
-#         outputs=[text_input, audio_input]
-#     )
-    
-#     submit_button.click(
-#         process_input,
-#         inputs=[input_type, text_input, audio_input],
-#         outputs=[output]
-#     )
-    
-#     gr.Examples(examples, inputs=[audio_input])
 
-# iface.launch(server_name="127.0.0.1", server_port=8080)
 with gr.Blocks() as iface:
     gr.Markdown("# Llama3-1-S: checkpoint Aug 15, 2024")
     gr.Markdown("Enter text to convert to audio, then submit the audio to generate text or Upload Audio")
@@ -226,11 +199,7 @@ with gr.Blocks() as iface:
         return audio_file
     def process_example(file_path):
         return update_visibility("audio") 
-    # input_type.change(
-    #     update_visibility,
-    #     inputs=[input_type],
-    #     outputs=[text_input, audio_input, audio_output, convert_button]
-    # )
+    
     input_type.change(
         update_visibility,
         inputs=[input_type],
