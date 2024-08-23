@@ -8,74 +8,68 @@
   <p><small>Image source: <a href="https://www.amazon.co.uk/When-Llama-Learns-Listen-Feelings/dp/1839237988">"When Llama Learns to Listen"</a></small></p>
 </div>
 
-## Introduction
-Llama3-s is an open, ongoing research project by [Homebrew](https://homebrew.ltd/) to extend an a Large Language Model (LLM) that native understands audio input. Inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818), it employs an early fusion model, enabling native audio comprehension. Our approach, focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
+> [!WARNING]  
+> llama3-s is an on-going open research experiment in its early training runs. 
+> - Join us in the  `#research` channel in [Homebrew's Discord](https://discord.com/invite/FTk2MvZwJH)
+> - We livestream training runs in `#research-livestream`
 
-The project provides a full codebase and replication instructions for synthetic data creation and training.
+> [!NOTE]  
+> 23nd Aug 2024 Update: 
+> - Our lastest model can understand all human voices but its sensitive to bad compression on the incoming audio and canot cannot listen to >10s audio.
+> - Can only process single-sound instruction data
+> - Current Demo: [https://dollars-scholar-wins-antique.trycloudflare.com/](https://dollars-scholar-wins-antique.trycloudflare.com/)
 
-⚠️ Work in Progress
-Llama3-s is currently under active development. Please note the following limitations:
+## About
+llama3-s is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. We are mainly  
 
-- Model is sensitive to bad compression on the incoming audio
-- Model cannot listen to >10s audio and get confused
-- ~~The model currently responds only to female voices~~ --> Our lastest model responds to all voices
-- It processes single-turn sound instruction data
+We are training an [early fusion](https://medium.com/@raj.pulapakura/multimodal-models-and-fusion-a-complete-guide-225ca91f6861#:~:text=3.3.,-Early%20Fusion&text=Early%20fusion%20refers%20to%20combining,fused%20representation%20through%20the%20model.) model using techniques inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818). Our approach is focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
 
-We are continuously working to expand these capabilities.
+llama3-s is being done as an open science experiment with an open source codebase and dataset. We ~~build~~ train in public:
+- [`#research`](https://discord.com/invite/FTk2MvZwJH) : for discussions, updates, and questions
+- [`#research-livestream`](https://discord.com/invite/FTk2MvZwJH): see our training runs live
 
-## News
-- [2024/08/20] We’re excited to share llama3s v0.2, our latest multimodal checkpoint with improved speech understanding. We released [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2), trained on 440M tokens for 5 epochs and [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2), pretrained on 900M sementic sound tokens. 
-- [2024/07/19] We released [llama3-s-2024-07-19-v0.1](https://huggingface.co/homebrewltd/llama3-s-2024-07-19), trained on 1.35B tokens. This model achieves a loss of 1.0.
-- [2024/07/01] We released [llama3-s-2024-07-08-v0.1](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), trained on 700M tokens. This model achieves a loss of 1.7.
-- [2024/06/23] We released [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), our initialized model with expanded vocabulary using Encodec as audio tokenizer.
+## Current Progress
+- 23 Aug: We’re excited to share [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2), our latest multimodal checkpoint with improved speech understanding by enhancing the model's audio instruction-following capabilities through training on interleaving synthetic data.  
+- 17 Aug: We pre-trained our LLaMA 3.1 model on continuous speech data, tokenized using WhisperSpeechVQ. The final loss converged to approximately 1.9, resulting in our checkpoint: [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2)
+- 2 Aug: Retrained phase 1 with llama3.1 and fixes to hyperparameters, achieving significant improvement (MMLU: 0.66 -> 0.61)
+- 1 Aug: Identified typo in original training recipe, causing significant degradation (MMLU: 0.6 -> 0.2), proposed fixes.
+- 30 July: Presented llama3-s progress at: [AI Training: From PyTorch to GPU Clusters](https://lu.ma/ws8t6wom?tk=wZvFmm)
+- 19 July: [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) understands synthetic voice with limited results
+- 1 July: [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) showed converging loss (1.7) with limited data
 
-## Contents
-- [Models](#models)
-- [Dataset](#dataset)
-- [Synthetic Generation](https://github.com/homebrewltd/llama3-s/blob/main/synthetic_data/README.md)
-- [Folder Structure Organize](#organize-the-inputoutput-directory)
-- [Training with HF Trainer](#training-with-hf-trainer)
-- [Training with Torchtune](#training-with-torchtune)
+## Training Runs: 
 
-## Quickstart with Google Colab
+We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
+
+| Date       | Model Checkpoint                                                              | Dataset                                                                                                 | Tokens | Step  | Batch Size | Loss    | Training Cost |
+| ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------ | ----- | ---------- | ------- | ------------- |
+| 23 Aug 24 | [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2) | [Instruction-speech-whispervq-v2](https://huggingface.co/datasets/homebrewltd/instruction-speech-whispervq-v2)                                     | 440M  | 36305 | 128        | 0.7     |     ~240$     |
+| 17 Aug 24 | [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2) | [Raw-speech-whispervq-v1](https://huggingface.co/datasets/homebrewltd/raw-speech-whispervq-v1)                                    | 900M  | 5042 | 480        | 1.9     |     ~563$     |
+| 1 July 24  | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 700M   | 1431k | 128        | 1.7-1.8 |     ~300$     |
+| 23 July 24 | [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init)             | [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1)   | 0M     | N/A   | N/A        | N/A     |               |
+
+## Join Us
+
+llama3-s is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
+
+### Quickstart with Google Colab
 
 Get started quickly using our Google Colab notebook:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VW_saWuNnOrl_nYCVksqqHpJmPQsyOOM?usp=sharing)
 
+Checkout this notebook for out latest model:
 
-## Models:
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18IiwN0AzBZaox5o0iidXqWD1xKq11XbZ?usp=sharing)
 
-We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
-| Date | Checkpoint | Tokens | Step | Batch Size | Loss | Status |
-|------|------------|--------|------|------------|------|--------|
-| 📅 2024-08-20 | 🔗 [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2) | 🔢 440M | 🔄 36305 | 💼 128 | 📉 0.7| 🚧 In progress |
-| 📅 2024-08-20 | 🔗 [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2) | 🔢 900M | 🔄 5042 | 💼 480 | 📉 2.0| 🚧 In progress |
-| 📅 2024-08-20 | 🔗 [llama3.1-s-whispervq-init](https://huggingface.co/homebrewltd/llama3.1-s-whispervq-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
-| 📅 2024-07-19 | 🔗 [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | 🔢 1.35B | 🔄 6520 | 💼 128 | 📉 1.0| 🚧 In progress |
-| 📅 2024-07-01 | 🔗 [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | 🔢 700M | 🔄 4320 | 💼 128 | 📉 1.7-1.8  | 🚧 In progress |
-| 📅 2024-06-23 | 🔗 [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
-
-## Dataset
-
-We provide different version of the processed data for model training, converted to the Llama3 format and ready for fine-tuning. 
-⚠️ Note: The most recent implementation utilizes WhisperVQ as the audio tokenizer, whereas previous versions employed EnCodec.
-| Date       | HF Checkpoint                                   | Tokens | 
-|------------|-------------------------------------------------|--------|
-| 📅 2024-08-20 | 🔗 [Instruction-speech-whispervq-v2](https://huggingface.co/datasets/homebrewltd/instruction-speech-whispervq-v2) | 🔢 440M |
-| 📅 2024-08-20 | 🔗 [Raw-speech-whispervq-v1](https://huggingface.co/datasets/homebrewltd/raw-speech-whispervq-v1) | 🔢 900M |
-| 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/homebrew-research) | 🔢 1.35B | 
-| 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 🔢 800M |
-| 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1) | 🔢 450M |
-
-## Synthetic Generation
+###  Synthetic Generation
 
 For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/README.md).
 
-## Organize the input/output directory 
+### Organize the input/output directory 
 1. First Clone the Repo from github:
 ```
-git clone --single-branch --branch training_script https://github.com/janhq/llama3-s.git
+git clone --recurse-submodules https://github.com/homebrewltd/llama3-s.git
 ```
 2. Organize the folder structure as follows before training:
 ```
@@ -90,8 +84,9 @@ llama3-s
 │   │   ├── Meta-Llama-3-70B-Instruct
 
 ```
-## Training with HF Trainer
-1. Install Depencencies
+
+### Training with HF Trainer
+1. Install Dependencies
 ```
 python -m venv hf_trainer
 chmod +x scripts/install.sh
@@ -113,6 +108,7 @@ export CUTLASS_PATH="cutlass"
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 accelerate launch --config_file ./accelerate_config.yaml train.py 
 ```
+
 ## Training with Torchtune
 1. Install Package
 ```
@@ -134,7 +130,8 @@ nano torchtune/recipes/configs/jan-llama3-s/8B_full.yaml
 ```
 tune run --nproc_per_node 4 full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/8B_full.yaml
 ```
-## Reference
+
+## References
 ```bibtex
 @misc{chameleonteam2024chameleonmixedmodalearlyfusionfoundation,
       title={Chameleon: Mixed-Modal Early-Fusion Foundation Models}, 
