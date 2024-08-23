@@ -45,6 +45,7 @@ We provide our fully finetuned models on Phase 1 and 2 data and the initialized 
 | ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------ | ----- | ---------- | ------- | ------------- |
 | 23 Aug 24 | [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2) | [Instruction-speech-whispervq-v2](https://huggingface.co/datasets/homebrewltd/instruction-speech-whispervq-v2)                                     | 440M  | 36305 | 128        | 0.7     |     ~240$     |
 | 17 Aug 24 | [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2) | [Raw-speech-whispervq-v1](https://huggingface.co/datasets/homebrewltd/raw-speech-whispervq-v1)                                    | 900M  | 5042 | 480        | 1.9     |     ~563$     |
+| 19 July 24 | [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | [Instruction-Speech-Full](https://huggingface.co/homebrew-research)                                     | 1.35B  | 1195k | 128        | 1.0     |     ~300$     |
 | 1 July 24  | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 700M   | 1431k | 128        | 1.7-1.8 |     ~300$     |
 | 23 July 24 | [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init)             | [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1)   | 0M     | N/A   | N/A        | N/A     |               |
 
@@ -58,9 +59,10 @@ Get started quickly using our Google Colab notebook:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VW_saWuNnOrl_nYCVksqqHpJmPQsyOOM?usp=sharing)
 
-Checkout this notebook for out latest model:
+Checkout this notebook to try out latest model:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18IiwN0AzBZaox5o0iidXqWD1xKq11XbZ?usp=sharing)
+
 
 ###  Synthetic Generation
 
@@ -109,7 +111,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 accelerate launch --config_file ./accelerate_config.yaml train.py 
 ```
 
-## Training with Torchtune
+### Training with Torchtune
 1. Install Package
 ```
 python -m venv torchtune
@@ -126,7 +128,7 @@ Setup the Dataset from HF path by change the path and change the name of the mod
 nano torchtune/recipes/configs/jan-llama3-s/8B_full.yaml
 ```
 
-2. Training Mutil GPU (1-8GPUs Supported)
+2. Training Multi GPU (1-8GPUs Supported)
 ```
 tune run --nproc_per_node 4 full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/8B_full.yaml
 ```
