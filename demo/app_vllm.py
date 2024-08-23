@@ -96,7 +96,7 @@ def setup_vllm_pipeline(model_path, use_8bit=False):
     return vllm_generate, tokenizer
 
 tts = TTSProcessor("cuda")
-llm_path = "homebrewltd/Llama3-1-s-instruct-version-1"
+llm_path = "homebrewltd/llama3.1-s-instruct-v0.2"
 vllm_generate, tokenizer = setup_vllm_pipeline(llm_path, use_8bit=False)
 # print(tokenizer.encode("/s", add_special_tokens=False))# return the audio tensor
 def text_to_audio_file(text):

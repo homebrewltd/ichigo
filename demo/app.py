@@ -21,7 +21,7 @@ vq_model = RQBottleneckTransformer.load_model(
 vq_model.ensure_whisper(device)
 tts = TTSProcessor(device)
 use_8bit = False    
-llm_path = "homebrewltd/Llama3.1-s-instruct-2024-08-19-epoch-3"
+llm_path = "homebrewltd/llama3.1-s-instruct-v0.2"
 tokenizer = AutoTokenizer.from_pretrained(llm_path)
 model_kwargs = {}
 if use_8bit:

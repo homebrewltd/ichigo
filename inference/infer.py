@@ -8,6 +8,7 @@ from huggingface_hub import hf_hub_download
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+
 if not os.path.exists("whisper-vq-stoks-medium-en+pl-fixed.model"):
     hf_hub_download(
         repo_id="jan-hq/WhisperVQ",
@@ -17,6 +18,7 @@ if not os.path.exists("whisper-vq-stoks-medium-en+pl-fixed.model"):
 vq_model = RQBottleneckTransformer.load_model(
         "whisper-vq-stoks-medium-en+pl-fixed.model"
     ).to(device)
+
 def audio_to_sound_tokens(audio_path, target_bandwidth=1.5, device=device):
     vq_model.ensure_whisper(device)
     
@@ -66,17 +68,10 @@ def generate_text(pipe, messages, max_new_tokens=64, temperature=0.0, do_sample=
     return output[0]['generated_text']
 
 # Usage
-# sampling_params = SamplingParams(temperature=0.0, max_tokens=1024, skip_special_tokens=False)
-# tokenizer = AutoTokenizer.from_pretrained("homebrewltd/Llama3-1-s-hf-CP-2000-instruct")
-# llm = LLM("homebrewltd/Llama3-1-s-hf-CP-2000-instruct", tokenizer=tokenizer)
-llm_path = "homebrewltd/Llama3-1-s-hf-CP-2000-instruct"
+llm_path = "homebrewltd/llama3.1-s-instruct-v0.2"
 pipe = setup_pipeline(llm_path, use_8bit=False)
 sound_tokens = audio_to_sound_tokens("./examples_audio/what-is-the-color-of-the-ocean.wav")
-# sound_input_str = tokenizer.apply_chat_template([sound_tokens], tokenize=False, add_generation_prompt=True)
-# outputs = llm.generate(sound_input_str, sampling_params)
-# output_based_on_sound = outputs[0].outputs[0].text
 print(sound_tokens)
-# print(sound_input_str)
 messages = [
     {"role": "user", "content": sound_tokens},
 ]
