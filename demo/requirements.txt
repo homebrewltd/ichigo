@@ -1,13 +1,19 @@
-torchvision
-torchaudio
+openai-whisper==20231117
+IPython
+peft
+huggingface_hub
+matplotlib
 pyarrow
 datasets
 encodec
-WhisperSpeech
-transformers
 soundfile
-gradio
-openai-whisper
-torch==2.4.0
+gradio==4.39.0
+transformers
+bitsandbytes
+torchvision
 vector_quantize_pytorch
 webdataset
+git+https://github.com/homebrewltd/WhisperSpeech.git
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.2.0
+torchaudio==2.2.0

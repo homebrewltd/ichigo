@@ -1,7 +1,15 @@
-torch
+openai-whisper==20231117
+huggingface_hub
+IPython
 pyarrow
+matplotlib
+soundfile
 datasets
 encodec
-WhisperSpeech
 boto3
 fire
+vector_quantize_pytorch
+webdataset
+git+https://github.com/homebrewltd/WhisperSpeech.git
+torch==2.2.0
+torchaudio==2.2.0

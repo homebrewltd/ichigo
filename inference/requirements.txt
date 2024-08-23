@@ -1,14 +1,14 @@
-openai-whisper
-fastcore
-fastprogress
+openai-whisper==20231117
+IPython
+peft
 huggingface_hub
 matplotlib
-numpy
-pandas
-torch==2.4.0
-torchaudio==2.4.0
+soundfile
 transformers
+bitsandbytes
 vector_quantize_pytorch
-vllm
 webdataset
-whisperspeech
+git+https://github.com/homebrewltd/WhisperSpeech.git
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.2.0
+torchaudio==2.2.0

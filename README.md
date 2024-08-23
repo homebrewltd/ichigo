@@ -1,8 +1,8 @@
 <div align="center">
 
 # Llama3-S: When llama learns to listen
-<a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
-<a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
+<a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
+<a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
   <img src="images/llama-listen.jpg" width="180"/>
   <p><small>Image source: <a href="https://www.amazon.co.uk/When-Llama-Learns-Listen-Feelings/dp/1839237988">"When Llama Learns to Listen"</a></small></p>
@@ -14,8 +14,8 @@
 > - We livestream training runs in `#research-livestream`
 
 > [!NOTE]  
-> 2nd Aug 2024 Update: 
-> - llama3-s can understand female, Australian accents, i.e. our synthetic voice data generator 😂
+> 23nd Aug 2024 Update: 
+> - Our lastest model can understand all human voices but its sensitive to bad compression on the incoming audio and canot cannot listen to >10s audio.
 > - Can only process single-sound instruction data
 > - Current Demo: [https://dollars-scholar-wins-antique.trycloudflare.com/](https://dollars-scholar-wins-antique.trycloudflare.com/)
 
@@ -29,6 +29,8 @@ llama3-s is being done as an open science experiment with an open source codebas
 - [`#research-livestream`](https://discord.com/invite/FTk2MvZwJH): see our training runs live
 
 ## Current Progress
+- 23 Aug: We’re excited to share [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2), our latest multimodal checkpoint with improved speech understanding by enhancing the model's audio instruction-following capabilities through training on interleaving synthetic data.  
+- 17 Aug: We pre-trained our LLaMA 3.1 model on continuous speech data, tokenized using WhisperSpeechVQ. The final loss converged to approximately 1.9, resulting in our checkpoint: [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2)
 - 2 Aug: Retrained phase 1 with llama3.1 and fixes to hyperparameters, achieving significant improvement (MMLU: 0.66 -> 0.61)
 - 1 Aug: Identified typo in original training recipe, causing significant degradation (MMLU: 0.6 -> 0.2), proposed fixes.
 - 30 July: Presented llama3-s progress at: [AI Training: From PyTorch to GPU Clusters](https://lu.ma/ws8t6wom?tk=wZvFmm)
@@ -41,6 +43,8 @@ We provide our fully finetuned models on Phase 1 and 2 data and the initialized 
 
 | Date       | Model Checkpoint                                                              | Dataset                                                                                                 | Tokens | Step  | Batch Size | Loss    | Training Cost |
 | ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------ | ----- | ---------- | ------- | ------------- |
+| 23 Aug 24 | [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2) | [Instruction-speech-whispervq-v2](https://huggingface.co/datasets/homebrewltd/instruction-speech-whispervq-v2)                                     | 440M  | 36305 | 128        | 0.7     |     ~240$     |
+| 17 Aug 24 | [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2) | [Raw-speech-whispervq-v1](https://huggingface.co/datasets/homebrewltd/raw-speech-whispervq-v1)                                    | 900M  | 5042 | 480        | 1.9     |     ~563$     |
 | 19 July 24 | [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | [Instruction-Speech-Full](https://huggingface.co/homebrew-research)                                     | 1.35B  | 1195k | 128        | 1.0     |     ~300$     |
 | 1 July 24  | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 700M   | 1431k | 128        | 1.7-1.8 |     ~300$     |
 | 23 July 24 | [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init)             | [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1)   | 0M     | N/A   | N/A        | N/A     |               |
@@ -54,6 +58,11 @@ llama3-s is an open research project. We're looking for collaborators, and will 
 Get started quickly using our Google Colab notebook:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VW_saWuNnOrl_nYCVksqqHpJmPQsyOOM?usp=sharing)
+
+Checkout this notebook to try out latest model:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18IiwN0AzBZaox5o0iidXqWD1xKq11XbZ?usp=sharing)
+
 
 ###  Synthetic Generation
 
@@ -106,14 +115,13 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
 1. Install Package
 ```
 python -m venv torchtune
-pip install --pre torch==2.5.0.dev20240617  --index-url https://download.pytorch.org/whl/nightly/cu121 #or cu118
-pip install --pre torchdata --index-url https://download.pytorch.org/whl/nightly
+pip install torch torchvision tensorboard
 cd ./torchtune
 pip install -e .
 ```
 You can also download the model using tune:
 ```
-tune download meta-llama/Meta-Llama-3-70b --hf-token <token> --output-dir ../model_zoo/Meta-Llama-3-70b --ignore-patterns "original/consolidated*"
+tune download homebrewltd/llama3.1-s-whispervq-init --hf-token <token>  --output-dir ../model_zoo/llama3.1-s-whispervq-init --ignore-patterns "original/consolidated*"
 ```
 Setup the Dataset from HF path by change the path and change the name of the model in the following YAML file.
 ```
@@ -122,7 +130,7 @@ nano torchtune/recipes/configs/jan-llama3-s/8B_full.yaml
 
 2. Training Multi GPU (1-8GPUs Supported)
 ```
-tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B_full
+tune run --nproc_per_node 4 full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/8B_full.yaml
 ```
 
 ## References
