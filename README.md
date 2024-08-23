@@ -1,8 +1,8 @@
 <div align="center">
 
 # Llama3-S: When llama learns to listen
-<a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
-<a href='https://huggingface.co/collections/homebrew-research/llama3-s-669df2139f0576abc6eb7405'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
+<a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
+<a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
   <img src="images/llama-listen.jpg" width="180"/>
   <p><small>Image source: <a href="https://www.amazon.co.uk/When-Llama-Learns-Listen-Feelings/dp/1839237988">"When Llama Learns to Listen"</a></small></p>
@@ -16,15 +16,18 @@ The project provides a full codebase and replication instructions for synthetic 
 ⚠️ Work in Progress
 Llama3-s is currently under active development. Please note the following limitations:
 
-- The model currently responds only to female voices
+- Model is sensitive to bad compression on the incoming audio
+- Model cannot listen to >10s audio and get confused
+- ~~The model currently responds only to female voices~~ --> Our lastest model responds to all voices
 - It processes single-turn sound instruction data
 
 We are continuously working to expand these capabilities.
 
 ## News
-- [2024/07/19] We released [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19), trained on 1.35B tokens. This model achieves a loss of 1.0.
-- [2024/07/01] We released [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), trained on 700M tokens. This model achieves a loss of 1.7.
-- [2024/06/23] We released [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), our initialized model with expanded vocabulary.
+- [2024/08/20] We’re excited to share llama3s v0.2, our latest multimodal checkpoint with improved speech understanding. We released [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2), trained on 440M tokens for 5 epochs and [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2), pretrained on 900M sementic sound tokens. 
+- [2024/07/19] We released [llama3-s-2024-07-19-v0.1](https://huggingface.co/homebrewltd/llama3-s-2024-07-19), trained on 1.35B tokens. This model achieves a loss of 1.0.
+- [2024/07/01] We released [llama3-s-2024-07-08-v0.1](https://huggingface.co/homebrewltd/llama3-s-2024-07-08), trained on 700M tokens. This model achieves a loss of 1.7.
+- [2024/06/23] We released [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init), our initialized model with expanded vocabulary using Encodec as audio tokenizer.
 
 ## Contents
 - [Models](#models)
@@ -46,15 +49,21 @@ Get started quickly using our Google Colab notebook:
 We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
 | Date | Checkpoint | Tokens | Step | Batch Size | Loss | Status |
 |------|------------|--------|------|------------|------|--------|
+| 📅 2024-08-20 | 🔗 [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2) | 🔢 440M | 🔄 36305 | 💼 128 | 📉 0.7| 🚧 In progress |
+| 📅 2024-08-20 | 🔗 [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2) | 🔢 900M | 🔄 5042 | 💼 480 | 📉 2.0| 🚧 In progress |
+| 📅 2024-08-20 | 🔗 [llama3.1-s-whispervq-init](https://huggingface.co/homebrewltd/llama3.1-s-whispervq-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
 | 📅 2024-07-19 | 🔗 [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | 🔢 1.35B | 🔄 6520 | 💼 128 | 📉 1.0| 🚧 In progress |
 | 📅 2024-07-01 | 🔗 [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | 🔢 700M | 🔄 4320 | 💼 128 | 📉 1.7-1.8  | 🚧 In progress |
 | 📅 2024-06-23 | 🔗 [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init) | 🔢 0M | 🔄 N/A | 💼 N/A | 📉 N/A | N/A |
 
 ## Dataset
 
-We provide 3 different version of the processed data for model training, converted to the Llama3 format and ready for fine-tuning:
+We provide different version of the processed data for model training, converted to the Llama3 format and ready for fine-tuning. 
+⚠️ Note: The most recent implementation utilizes WhisperVQ as the audio tokenizer, whereas previous versions employed EnCodec.
 | Date       | HF Checkpoint                                   | Tokens | 
 |------------|-------------------------------------------------|--------|
+| 📅 2024-08-20 | 🔗 [Instruction-speech-whispervq-v2](https://huggingface.co/datasets/homebrewltd/instruction-speech-whispervq-v2) | 🔢 440M |
+| 📅 2024-08-20 | 🔗 [Raw-speech-whispervq-v1](https://huggingface.co/datasets/homebrewltd/raw-speech-whispervq-v1) | 🔢 900M |
 | 📅 2024-07-19 | 🔗 [Instruction-Speech-Full](https://huggingface.co/homebrew-research) | 🔢 1.35B | 
 | 📅 2024-07-18 | 🔗 [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 🔢 800M |
 | 📅 2024-06-30 | 🔗 [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1) | 🔢 450M |
@@ -108,14 +117,13 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
 1. Install Package
 ```
 python -m venv torchtune
-pip install --pre torch==2.5.0.dev20240617  --index-url https://download.pytorch.org/whl/nightly/cu121 #or cu118
-pip install --pre torchdata --index-url https://download.pytorch.org/whl/nightly
+pip install torch torchvision tensorboard
 cd ./torchtune
 pip install -e .
 ```
 You can also download the model using tune:
 ```
-tune download meta-llama/Meta-Llama-3-70b --hf-token <token> --output-dir ../model_zoo/Meta-Llama-3-70b --ignore-patterns "original/consolidated*"
+tune download homebrewltd/llama3.1-s-whispervq-init --hf-token <token>  --output-dir ../model_zoo/llama3.1-s-whispervq-init --ignore-patterns "original/consolidated*"
 ```
 Setup the Dataset from HF path by change the path and change the name of the model in the following YAML file.
 ```
@@ -124,7 +132,7 @@ nano torchtune/recipes/configs/jan-llama3-s/8B_full.yaml
 
 2. Training Mutil GPU (1-8GPUs Supported)
 ```
-tune run --nproc_per_node 4 full_finetune_distributed --config janhq-llama3-s/8B_full
+tune run --nproc_per_node 4 full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/8B_full.yaml
 ```
 ## Reference
 ```bibtex

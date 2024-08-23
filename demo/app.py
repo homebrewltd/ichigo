@@ -100,12 +100,12 @@ def text_to_audio_file(text):
     tts.convert_text_to_audio_file(text, temp_file)
     print(f"Saved audio to {temp_file}")
     return temp_file
-def process_input(input_type, text_input=None, audio_file=None):
+def process_input(audio_file=None):
     
     for partial_message in process_audio(audio_file):
         yield partial_message
     
-def process_transcribe_input(input_type, text_input=None, audio_file=None):
+def process_transcribe_input(audio_file=None):
     
     for partial_message in process_audio(audio_file, transcript=True):
         yield partial_message
@@ -113,7 +113,7 @@ def process_transcribe_input(input_type, text_input=None, audio_file=None):
 class StopOnTokens(StoppingCriteria):
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
         # encode </s> token
-        stop_ids = [tokenizer.eos_token_id]  # Adjust this based on your model's tokenizer
+        stop_ids = [tokenizer.eos_token_id, 128009]  # Adjust this based on your model's tokenizer
         for stop_id in stop_ids:
             if input_ids[0][-1] == stop_id:
                 return True
@@ -182,15 +182,14 @@ with gr.Blocks() as iface:
     transcrip_button = gr.Button("Please Transcribe the audio for me")
     
     text_output = gr.Textbox(label="Generated Text")
-    
+    def reset_textbox():
+        return gr.update(value="")
     def update_visibility(input_type):
         return (gr.update(visible=input_type == "text"), 
                 gr.update(visible=input_type == "text"))
     def convert_and_display(text):
         audio_file = text_to_audio_file(text)
-        return audio_file
-    def process_example(file_path):
-        return update_visibility("audio") 
+        return audio_file 
 
     input_type.change(
         update_visibility,
@@ -206,16 +205,16 @@ with gr.Blocks() as iface:
     
     submit_button.click(
         process_input,
-        inputs=[input_type, text_input, audio_input],
+        inputs=[audio_input],
         outputs=[text_output]
     )
     transcrip_button.click(
         process_transcribe_input,
-        inputs=[input_type, text_input, audio_input],
+        inputs=[audio_input],
         outputs=[text_output]
     )
     
-    gr.Examples(examples, inputs=[audio_input], outputs=[audio_input], fn=process_example)
+    gr.Examples(examples, inputs=[audio_input])
 iface.queue(max_size=10)
 # iface.launch(server_name="127.0.0.1", server_port=8080)
 # launch locally
