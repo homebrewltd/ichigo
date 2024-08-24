@@ -1,8 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, pipeline
 import torch
 import torchaudio
-from vq_stoks import RQBottleneckTransformer
-from vllm import LLM, SamplingParams
+from whisperspeech.vq_stoks import RQBottleneckTransformer
 import os
 from huggingface_hub import hf_hub_download
 
