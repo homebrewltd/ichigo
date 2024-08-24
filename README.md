@@ -1,6 +1,8 @@
 <div align="center">
 
 # Llama3-S: When llama learns to listen
+<a href='https://homebrew.ltd/blog/llama3-just-got-ears'><img src='https://img.shields.io/badge/Project-Blog-Green'></a>
+<a href='https://demo.homebrew.ltd/'><img src='https://img.shields.io/badge/Project-Demo-violet'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
@@ -17,7 +19,7 @@
 > 23nd Aug 2024 Update: 
 > - Our lastest model can understand all human voices but its sensitive to bad compression on the incoming audio and canot cannot listen to >10s audio.
 > - Can only process single-sound instruction data
-> - Current Demo: [https://dollars-scholar-wins-antique.trycloudflare.com/](https://dollars-scholar-wins-antique.trycloudflare.com/)
+> - Current Demo: [https://demo.homebrew.ltd/](https://demo.homebrew.ltd/)
 
 ## About
 llama3-s is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. We are mainly  
@@ -59,7 +61,7 @@ Get started quickly using our Google Colab notebook:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VW_saWuNnOrl_nYCVksqqHpJmPQsyOOM?usp=sharing)
 
-Checkout this notebook to try out latest model:
+Checkout this notebook to try our latest model:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18IiwN0AzBZaox5o0iidXqWD1xKq11XbZ?usp=sharing)
 
@@ -132,7 +134,28 @@ nano torchtune/recipes/configs/jan-llama3-s/8B_full.yaml
 ```
 tune run --nproc_per_node 4 full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/8B_full.yaml
 ```
+## Demo
 
+### Gradio Web UI
+We offer code for users to create a web UI demo. Please follow the instructions below:
+```
+python -m venv demo
+source demo/bin/activate
+# First install all required packages
+pip install --no-cache-dir -r ./demo/requirements.txt
+```
+Then run the command below to launch a Gradio demo locally. You can add the variables `use-4bit` and `use-8bit` for quantized usage:
+
+```
+python -m demo.app --host 0.0.0.0 --port 7860 --max-seq-len 1024 
+```
+
+You can also host a demo using vLLM for faster inference but its not support streaming output:
+
+```
+python -m demo.app_vllm
+```
+**Alternatively, you can easily try our demo on [HuggingFace](https://huggingface.co/spaces/jan-hq/Llama3.1-s-v0.2) 🤗**
 ## References
 ```bibtex
 @misc{chameleonteam2024chameleonmixedmodalearlyfusionfoundation,
