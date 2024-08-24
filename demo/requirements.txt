@@ -6,6 +6,7 @@ matplotlib
 pyarrow
 datasets
 encodec
+librosa
 soundfile
 gradio==4.39.0
 transformers

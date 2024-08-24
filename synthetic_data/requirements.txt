@@ -3,6 +3,7 @@ huggingface_hub
 IPython
 pyarrow
 matplotlib
+librosa
 soundfile
 datasets
 encodec
