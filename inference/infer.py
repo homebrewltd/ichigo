@@ -29,6 +29,18 @@ def audio_to_sound_tokens(audio_path, target_bandwidth=1.5, device=device):
         codes = codes[0].cpu().tolist()
     
     result = ''.join(f'<|sound_{num:04d}|>' for num in codes)
+    return f'<|sound_start|>{result}<|sound_end|>'
+def audio_to_sound_tokens_transcript(audio_path, target_bandwidth=1.5, device=device):
+    vq_model.ensure_whisper(device)
+    
+    wav, sr = torchaudio.load(audio_path)
+    if sr != 16000:
+        wav = torchaudio.functional.resample(wav, sr, 16000)
+    with torch.no_grad():
+        codes = vq_model.encode_audio(wav.to(device))
+        codes = codes[0].cpu().tolist()
+    
+    result = ''.join(f'<|sound_{num:04d}|>' for num in codes)
     return f'<|reserved_special_token_69|><|sound_start|>{result}<|sound_end|>'
 def setup_pipeline(model_path, use_4bit=False, use_8bit=False):
     tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -69,7 +81,7 @@ def generate_text(pipe, messages, max_new_tokens=64, temperature=0.0, do_sample=
 # Usage
 llm_path = "homebrewltd/llama3.1-s-instruct-v0.2"
 pipe = setup_pipeline(llm_path, use_8bit=False)
-sound_tokens = audio_to_sound_tokens("./examples_audio/what-is-the-color-of-the-ocean.wav")
+sound_tokens = audio_to_sound_tokens_transcript("./examples_audio/what-is-the-color-of-the-ocean.wav")
 print(sound_tokens)
 messages = [
     {"role": "user", "content": sound_tokens},
