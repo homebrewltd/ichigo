@@ -3,6 +3,7 @@ IPython
 peft
 huggingface_hub
 matplotlib
+librosa
 soundfile
 transformers
 bitsandbytes
