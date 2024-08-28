@@ -17,16 +17,16 @@
 
 > [!NOTE]  
 > 23nd Aug 2024 Update: 
-> - Our lastest model can understand all human voices but its sensitive to bad compression on the incoming audio and canot cannot listen to >10s audio.
+> - Our latest model can understand all human voices but it's sensitive to bad compression on the incoming audio and cannot listen to >10s audio.
 > - Can only process single-sound instruction data
 > - Current Demo: [https://demo.homebrew.ltd/](https://demo.homebrew.ltd/)
 
 ## About
-llama3-s is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. We are mainly  
+llama3-s is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. 
 
-We are training an [early fusion](https://medium.com/@raj.pulapakura/multimodal-models-and-fusion-a-complete-guide-225ca91f6861#:~:text=3.3.,-Early%20Fusion&text=Early%20fusion%20refers%20to%20combining,fused%20representation%20through%20the%20model.) model using techniques inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818). Our approach is focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
+We are training an [early fusion](https://medium.com/@raj.pulapakura/multimodal-models-and-fusion-a-complete-guide-225ca91f6861#:~:text=3.3.,-Early%20Fusion&text=Early%20fusion%20refers%20to%20combining,fused%20representation%20through%20the%20model.) model using techniques inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818). Our approach is focused on token transitivity which extends LLM's vocabulary to include sound tokens, and has the potential to be extended to various input types in the future.
 
-llama3-s is being done as an open science experiment with an open source codebase and dataset. We ~~build~~ train in public:
+llama3-s is being done as an open-science experiment with an open-source codebase and dataset. We ~~build~~ train in public:
 - [`#research`](https://discord.com/invite/FTk2MvZwJH) : for discussions, updates, and questions
 - [`#research-livestream`](https://discord.com/invite/FTk2MvZwJH): see our training runs live
 
