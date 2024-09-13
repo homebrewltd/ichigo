@@ -14,7 +14,7 @@ import pyarrow as pa
 from datasets import Dataset, load_dataset
 
 from audio_tokenizer import WhisperVQTokenizer
-from tts_processor import TTSProcessor
+from tts_processor import TTSProcessor, TTSementicToken
 from writer import Writer, save_batch
 from utils import (
     configure_logging,
@@ -57,8 +57,8 @@ def process_and_save_text(
     logger.debug("Process %s will process %s examples.", process_id, len(subset))
     batch_prompt = subset["prompt"]
     batch_index = subset["index"]
-    tts_processor = TTSProcessor(device=device)
-    audio_tokenizer = WhisperVQTokenizer(device=device)
+    # tts_processor = TTSProcessor(device=device)
+    tts_processor = TTSementicToken(device=device)
 
     # Create a writer for this process
     schema = pa.schema(
@@ -86,10 +86,10 @@ def process_and_save_text(
         logger.debug("Process %s processing item sample %s.", process_id, index)
         for attempt in range(max_retries):
             try:
-                audio = tts_processor.convert_text_to_audio(text, speaker)
-                audio_tokens = audio_tokenizer.encode(
-                    (audio, sample_rate)
-                )
+                audio_tokens = tts_processor.convert_text_to_tokens(text)[0]
+                # audio_tokens = audio_tokenizer.encode(
+                #     (audio, sample_rate)
+                # )
                 batch.append(
                     {
                         "index": index,

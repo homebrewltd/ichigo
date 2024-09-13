@@ -13,15 +13,15 @@ class WhisperVQTokenizer:
     def __init__(self, repo_id: str = "jan-hq/WhisperVQ", device: str = "cuda"):
         """Initialize the Audio Tokenizer with a specified device."""
         # Check if the model is downloaded
-        if not os.path.exists("whisper-vq-stoks-medium-en+pl-fixed.model"):
+        if not os.path.exists("whisper-vq-stoks-v3-7lang-fixed.model"):
             hf_hub_download(
                 repo_id=repo_id,
-                filename="whisper-vq-stoks-medium-en+pl-fixed.model",
+                filename="whisper-vq-stoks-v3-7lang-fixed.model",
                 local_dir=".",
             )
         self.device = device
         self.vq_model = RQBottleneckTransformer.load_model(
-            "whisper-vq-stoks-medium-en+pl-fixed.model"
+            "whisper-vq-stoks-v3-7lang-fixed.model"
         ).to(self.device)
         self.vq_model.ensure_whisper(self.device)
 
@@ -107,3 +107,8 @@ class EncodecTokenizer:
         # Interleave the audio codes between low and high frequency bands
         interleaved = torch.stack((audio_code1, audio_code2), dim=1).flatten()
         return interleaved.tolist()
+
+if __name__ == "__main__":
+    # Load the audio tokenizer
+    audio_tokenizer = WhisperVQTokenizer()
+    

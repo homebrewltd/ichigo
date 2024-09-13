@@ -1,7 +1,7 @@
 import torchaudio
 
 from whisperspeech.pipeline import Pipeline
-
+from whisperspeech.t2s_up_wds_mlang_enclm import TSARTransformer
 
 def convert_text_to_audio(pipe: Pipeline, text: str):
     """Convert text to audio.
@@ -29,8 +29,10 @@ def convert_text_to_audio_file(pipe: Pipeline, text: str, output_path: str):
 
 class TTSProcessor:
     def __init__(self, device: str):
+        
         """Initialize the TTS Processor with a specified device."""
         self.pipe = Pipeline(
+            t2s_ref="collabora/whisperspeech:t2s-v1.1-small-en+pl.model",
             s2a_ref="collabora/whisperspeech:s2a-q4-tiny-en+pl.model", device=device
         )
 
@@ -62,3 +64,17 @@ class TTSProcessor:
             output_path (str): The path to save the audio file.
         """
         self.pipe.generate_to_file(output_path, text, speaker=speaker)
+
+class TTSementicToken:
+    def __init__(self) -> None:
+        self.t2s_model = TSARTransformer.load_model("t2s-v1.95-medium-7lang.model")
+    def convert_text_to_tokens(self, text: str):
+        """Convert text to audio.
+
+        Args:
+            text (str): The text to convert to audio.
+
+        Returns:
+            torch.Tensor: The generated audio.
+        """
+        return self.t2s_model.generate(text)
