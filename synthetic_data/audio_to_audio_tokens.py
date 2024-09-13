@@ -217,6 +217,7 @@ def run_pipeline(
 def main(
     config_path: str = "./configs/synthetic_generation_cfg.yaml",
     test_mode: bool = False,
+    name: str = None,
     remaining_indices_file: str = None,
     save_dir: str = None,
 ):
@@ -224,9 +225,12 @@ def main(
 
     Args:
         config_path (str): The path to the configuration file."""
+    test_mode = False
     config = load_config(config_path)
 
     # Override config values if provided
+    if name:
+        config["dataset"]["name"] = name
     if remaining_indices_file:
         config["dataset"]["remaining_indices_file"] = remaining_indices_file
     if save_dir:

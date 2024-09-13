@@ -29,9 +29,10 @@ def convert_text_to_audio_file(pipe: Pipeline, text: str, output_path: str):
 
 class TTSProcessor:
     def __init__(self, device: str):
+        
         """Initialize the TTS Processor with a specified device."""
         self.pipe = Pipeline(
-            s2a_ref="collabora/whisperspeech:s2a-q4-tiny-en+pl.model", device=device
+            s2a_ref="whisperspeech/whisperspeech:s2a-q4-tiny-en+pl.model", device=device
         )
 
     def get_reference_voice_embedding(self, path: str):

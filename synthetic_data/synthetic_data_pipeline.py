@@ -13,7 +13,7 @@ import torch
 import pyarrow as pa
 from datasets import Dataset, load_dataset
 
-from audio_tokenizer import AudioTokenizer
+from audio_tokenizer import WhisperVQTokenizer
 from tts_processor import TTSProcessor
 from writer import Writer, save_batch
 from utils import (
@@ -58,14 +58,13 @@ def process_and_save_text(
     batch_prompt = subset["prompt"]
     batch_index = subset["index"]
     tts_processor = TTSProcessor(device=device)
-    audio_tokenizer = AudioTokenizer(device=device)
+    audio_tokenizer = WhisperVQTokenizer(device=device)
 
     # Create a writer for this process
     schema = pa.schema(
         [
             pa.field("index", pa.int64()),
-            pa.field("audio", pa.string()),
-            pa.field("tokens", pa.string()),
+            pa.field("tokens", pa.list_(pa.int64())),
         ]
     )
     file_path = os.path.join(save_dir, f"audio_tokens_{process_id}")
@@ -88,14 +87,13 @@ def process_and_save_text(
         for attempt in range(max_retries):
             try:
                 audio = tts_processor.convert_text_to_audio(text, speaker)
-                audio_tokens = audio_tokenizer.process_single_audio(
+                audio_tokens = audio_tokenizer.encode(
                     (audio, sample_rate)
                 )
                 batch.append(
                     {
                         "index": index,
-                        "audio": json.dumps(audio.cpu().squeeze(0).numpy().tolist()),
-                        "tokens": json.dumps(audio_tokens),
+                        "tokens": audio_tokens,
                     }
                 )
 
@@ -216,22 +214,28 @@ def run_pipeline(
     logger.info("Final processed count: %s", processed_count.value)
 
 
-def main(config_path: str = "./synthetic_generation_cfg.yaml"):
+def main(config_path: str = "./synthetic_generation_cfg.yaml",test_mode: bool = False, save_dir: str = None, name: str = None, speaker: str = None):
     """Run the pipeline to convert text to audio and tokenize the audio.
 
     Args:
         config_path (str): The path to the configuration file."""
+    test_mode = False
     config = load_config(config_path)
     global logger
 
     logger = configure_logging(config)
-
+    if speaker:
+        config["processing"]["speaker"] = speaker
+    if name:
+        config["dataset"]["name"] = name
+    if save_dir:
+        config["processing"]["save_dir"] = save_dir
     dataset = load_dataset(
         config["dataset"]["name"], split=config["dataset"]["split"], num_proc=64
     )
 
     # Check test mode
-    if config["test_mode"]:
+    if test_mode:
         pipeline_config = config["test"]
         dataset = dataset.select(range(config["test"]["num_samples"]))
     else:

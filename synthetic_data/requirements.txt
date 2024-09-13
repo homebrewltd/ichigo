@@ -11,6 +11,7 @@ boto3
 fire
 vector_quantize_pytorch
 webdataset
-git+https://github.com/homebrewltd/WhisperSpeech.git
+whisperspeech
 torch==2.2.0
 torchaudio==2.2.0
+numpy==1.26.4
