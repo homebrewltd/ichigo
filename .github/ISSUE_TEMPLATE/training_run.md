@@ -1,5 +1,5 @@
 ---
-name: Training Run
+name: 👟 Training Run
 about: A single training run
 title: 'run: [DESCRIPTION]'
 labels: 'type: training run'
@@ -9,7 +9,7 @@ assignees: ''
 ## Goal
 
 
-## Description
+## Methodology
 
 
 ## Hyperparams
@@ -19,3 +19,8 @@ assignees: ''
 
 
 ## Learnings
+
+
+## Quicklinks
+- Data: 
+- Checkpoints: 
