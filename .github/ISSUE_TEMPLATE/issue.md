@@ -1,8 +1,8 @@
 ---
-name: Issue
-about: Standard research issue template
-title: 'feat: [DESCRIPTION]'
-labels: 'type: feature request'
+name: Bug
+about: A problem or bug that needs investigation
+title: 'bug: [DESCRIPTION]'
+labels: 'type: bug'
 assignees: ''
 ---
 
@@ -12,7 +12,7 @@ assignees: ''
 ## Description
 
 
-## References
+## Hypotheses
 
 
-## Questions
+## Next Steps
