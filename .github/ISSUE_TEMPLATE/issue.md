@@ -1,6 +1,6 @@
 ---
 name: Issue
-about: Standard Research Issue Template
+about: Standard research issue template
 title: 'feat: [DESCRIPTION]'
 labels: 'type: feature request'
 assignees: ''

@@ -1,6 +1,6 @@
 ---
-name: \U0001F680 Epic request
-about: Suggest an idea for this project
+name: 🚀 Epic request
+about: New research initiative
 title: 'epic: [DESCRIPTION]'
 labels: 'type: epic'
 assignees: ''
