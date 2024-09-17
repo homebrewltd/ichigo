@@ -1,10 +1,9 @@
 ---
-name: Epic request
+name: \U0001F680 Epic request
 about: Suggest an idea for this project
 title: 'epic: [DESCRIPTION]'
 labels: 'type: epic'
 assignees: ''
-
 ---
 
 ## Goal
@@ -14,6 +13,9 @@ assignees: ''
 
 
 ## Resources
+
+
+## References
 
 
 ## Tasklist
