@@ -58,18 +58,23 @@ For detailed information on synthetic generation, please refer to the [Synthetic
 ```
 git clone --recurse-submodules https://github.com/homebrewltd/llama3-s.git
 ```
-2. Organize the folder structure as follows before training:
+
+2. The folder structure is as follows:
 ```
 llama3-s
-├── HF_Trainer
-├── synthetic_data
-├── scripts
-├── torchtune
-├── model_zoo
+├── HF_Trainer                               # HF training code (deprecated)
+├── synthetic_data                           # Synthetic data generation pipeline
+    ├── configs                              # Audio pipeline configs
+        ├── audio_to_audio                   # Parler audio (.wav) to semantic tokens
+        ├── synthetic_generation_config      # TTS semantic tokens
+├── scripts                                  # Setup scripts for Runpod
+├── torchtune                                # Submodule: our fork of fsdp with checkpointing
+├── model_zoo                                # Model checkpoints
 │   ├── LLM
 │   │   ├── Meta-Llama-3-8B-Instruct
 │   │   ├── Meta-Llama-3-70B-Instruct
-
+├── demo                                     # Selfhost this demo (vllm)
+├── inference                                # Google Colab
 ```
 
 ### Training with HF Trainer
