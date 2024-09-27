@@ -33,7 +33,7 @@ class TTSProcessor:
         """Initialize the TTS Processor with a specified device."""
         self.pipe = Pipeline(
             t2s_ref="collabora/whisperspeech:t2s-v1.1-small-en+pl.model",
-            s2a_ref="collabora/whisperspeech:s2a-q4-tiny-en+pl.model", device=device
+            s2a_ref="collabora/whisperspeech:s2a-q4-tiny-en+pl.model", device=device, torch_compile=True
         )
 
     def get_reference_voice_embedding(self, path: str):
@@ -68,7 +68,7 @@ class TTSProcessor:
 class TTSementicToken:
     def __init__(self, device: str) -> None:
         self.t2s_model = TSARTransformer.load_model("collabora/whisperspeech:t2s-v1.9-medium-7lang.model", device=device)
-        self.t2s_model.optimize(torch_compile=False)
+        self.t2s_model.optimize(torch_compile=True)
     def convert_text_to_tokens(self, text: str):
         """Convert text to audio.
 
