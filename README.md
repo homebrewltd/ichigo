@@ -1,13 +1,13 @@
 <div align="center">
 
-# Llama3-S: When llama learns to listen
+# :strawberry: Ichigo: The local real-time voice AI (Formerly llama3-s).
 <a href='https://homebrew.ltd/blog/llama3-just-got-ears'><img src='https://img.shields.io/badge/Project-Blog-Green'></a>
 <a href='https://demo.homebrew.ltd/'><img src='https://img.shields.io/badge/Project-Demo-violet'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
-  <img src="images/llama-listen.jpg" width="180"/>
-  <p><small>Image source: <a href="https://www.amazon.co.uk/When-Llama-Learns-Listen-Feelings/dp/1839237988">"When Llama Learns to Listen"</a></small></p>
+  <img src="images/ichigo.jpg" width="180"/>
+  <p><small>"Homebrewed early-fusion speech model"</a></small></p>
 </div>
 
 > [!NOTE]  
@@ -16,18 +16,18 @@
 > - Processes single-sound instruction data, under 10s, English
 
 > [!WARNING]  
-> llama3-s is an open research experiment
+> :strawberry: Ichigo is an open research experiment
 > - Join us in the  `#research` channel in [Homebrew's Discord](https://discord.com/invite/FTk2MvZwJH)
 > - We livestream training runs in `#research-livestream`
 
 ## About
-llama3-s is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. Think of it as an open data, open weight, on device Siri.
+:strawberry: Ichigo is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. Think of it as an open data, open weight, on device Siri.
 
 It uses an [early fusion](https://medium.com/@raj.pulapakura/multimodal-models-and-fusion-a-complete-guide-225ca91f6861#:~:text=3.3.,-Early%20Fusion&text=Early%20fusion%20refers%20to%20combining,fused%20representation%20through%20the%20model.) technique inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818).
 
 We ~~build~~ train in public:
-- [llama3-s v0.2 Checkpoint Writeup](https://homebrew.ltd/blog/llama3-just-got-ears)
-- [llama3-s v0.1 Checkpoint Writeup](https://homebrew.ltd/blog/can-llama-3-listen)
+- [Ichigo v0.2 Checkpoint Writeup](https://homebrew.ltd/blog/llama3-just-got-ears)
+- [Ichigo v0.1 Checkpoint Writeup](https://homebrew.ltd/blog/can-llama-3-listen)
 
 ## Progress
 - 23 Aug: We’re excited to share [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2), our latest multimodal checkpoint with improved speech understanding by enhancing the model's audio instruction-following capabilities through training on interleaving synthetic data.  
@@ -40,7 +40,7 @@ We ~~build~~ train in public:
 
 ## Join Us
 
-llama3-s is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
+:strawberry: Ichigo is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
 
 ### Quickstart with Google Colab
 
@@ -61,7 +61,7 @@ git clone --recurse-submodules https://github.com/homebrewltd/llama3-s.git
 
 2. The folder structure is as follows:
 ```
-llama3-s
+Ichigo
 ├── HF_Trainer                               # HF training code (deprecated)
 ├── synthetic_data                           # Synthetic data generation pipeline
     ├── configs                              # Audio pipeline configs
