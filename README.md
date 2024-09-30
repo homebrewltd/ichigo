@@ -11,9 +11,10 @@
 </div>
 
 > [!NOTE]  
-> 23nd Aug 2024 Update:
-> - Demo: [https://demo.homebrew.ltd/](https://demo.homebrew.ltd/)
-> - Processes single-sound instruction data, under 10s, English
+> Update: September 30, 2024
+> - We have rebranded from llama3-s to :strawberry: Ichigo.
+> - Our custom-built early-fusion speech model now has a name and a voice.
+> - It has improved multiturn capabilities and can now refuse to process inaudible queries.
 
 > [!WARNING]  
 > :strawberry: Ichigo is an open research experiment
