@@ -1,12 +1,12 @@
 <div align="center">
 
-# :strawberry: Ichigo: The local real-time voice AI (Formerly llama3-s).
+# :strawberry: Ichigo: Local real-time voice AI (Formerly llama3-s).
 <a href='https://homebrew.ltd/blog/llama3-just-got-ears'><img src='https://img.shields.io/badge/Project-Blog-Green'></a>
 <a href='https://demo.homebrew.ltd/'><img src='https://img.shields.io/badge/Project-Demo-violet'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
-  <img src="images/ichigo.jpg" width="180"/>
+  <img src="images/ichigo.jpg" width="240"/>
   <p><small>"Homebrewed early-fusion speech model"</a></small></p>
 </div>
 
