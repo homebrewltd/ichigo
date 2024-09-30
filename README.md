@@ -7,7 +7,7 @@
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
   <img src="images/ichigo.jpg" width="360"/>
-  <p><small>"Homebrewed early-fusion speech model"</a></small></p>
+  <p><small>Homebrewed early-fusion speech model</a></small></p>
 </div>
 
 > [!NOTE]  
