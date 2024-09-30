@@ -1,19 +1,20 @@
 <div align="center">
 
-# :strawberry: Ichigo: The local real-time voice AI (Formerly llama3-s).
+# :strawberry: Ichigo: Local real-time voice AI (Formerly llama3-s).
 <a href='https://homebrew.ltd/blog/llama3-just-got-ears'><img src='https://img.shields.io/badge/Project-Blog-Green'></a>
 <a href='https://demo.homebrew.ltd/'><img src='https://img.shields.io/badge/Project-Demo-violet'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
-  <img src="images/ichigo.jpg" width="180"/>
-  <p><small>"Homebrewed early-fusion speech model"</a></small></p>
+  <img src="images/ichigo.jpg" width="360"/>
+  <p><small>Homebrewed early-fusion speech model</a></small></p>
 </div>
 
 > [!NOTE]  
-> 23nd Aug 2024 Update:
-> - Demo: [https://demo.homebrew.ltd/](https://demo.homebrew.ltd/)
-> - Processes single-sound instruction data, under 10s, English
+> Update: September 30, 2024
+> - We have rebranded from llama3-s to :strawberry: Ichigo.
+> - Our custom-built early-fusion speech model now has a name and a voice.
+> - It has improved multiturn capabilities and can now refuse to process inaudible queries.
 
 > [!WARNING]  
 > :strawberry: Ichigo is an open research experiment
