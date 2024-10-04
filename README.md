@@ -1,36 +1,36 @@
 <div align="center">
 
-# Llama3-S: When llama learns to listen
+# :strawberry: Ichigo: Local real-time voice AI (Formerly llama3-s).
 <a href='https://homebrew.ltd/blog/llama3-just-got-ears'><img src='https://img.shields.io/badge/Project-Blog-Green'></a>
 <a href='https://demo.homebrew.ltd/'><img src='https://img.shields.io/badge/Project-Demo-violet'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
-  <img src="images/llama-listen.jpg" width="180"/>
-  <p><small>Image source: <a href="https://www.amazon.co.uk/When-Llama-Learns-Listen-Feelings/dp/1839237988">"When Llama Learns to Listen"</a></small></p>
+  <img src="images/ichigo.jpg" width="360"/>
+  <p><small>Homebrewed early-fusion speech model</a></small></p>
 </div>
 
+> [!NOTE]  
+> Update: September 30, 2024
+> - We have rebranded from llama3-s to :strawberry: Ichigo.
+> - Our custom-built early-fusion speech model now has a name and a voice.
+> - It has improved multiturn capabilities and can now refuse to process inaudible queries.
+
 > [!WARNING]  
-> llama3-s is an on-going open research experiment in its early training runs. 
+> :strawberry: Ichigo is an open research experiment
 > - Join us in the  `#research` channel in [Homebrew's Discord](https://discord.com/invite/FTk2MvZwJH)
 > - We livestream training runs in `#research-livestream`
 
-> [!NOTE]  
-> 23nd Aug 2024 Update: 
-> - Our lastest model can understand all human voices but its sensitive to bad compression on the incoming audio and canot cannot listen to >10s audio.
-> - Can only process single-sound instruction data
-> - Current Demo: [https://demo.homebrew.ltd/](https://demo.homebrew.ltd/)
-
 ## About
-llama3-s is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. We are mainly  
+:strawberry: Ichigo is an open, ongoing research experiment to extend a text-based LLM to have native "listening" ability. Think of it as an open data, open weight, on device Siri.
 
-We are training an [early fusion](https://medium.com/@raj.pulapakura/multimodal-models-and-fusion-a-complete-guide-225ca91f6861#:~:text=3.3.,-Early%20Fusion&text=Early%20fusion%20refers%20to%20combining,fused%20representation%20through%20the%20model.) model using techniques inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818). Our approach is focused on token transitivity which extends LLM's vocabulary to include sound tokens, has the potential to be extended to various input types in the future.
+It uses an [early fusion](https://medium.com/@raj.pulapakura/multimodal-models-and-fusion-a-complete-guide-225ca91f6861#:~:text=3.3.,-Early%20Fusion&text=Early%20fusion%20refers%20to%20combining,fused%20representation%20through%20the%20model.) technique inspired by [Meta's Chameleon paper](https://arxiv.org/abs/2405.09818).
 
-llama3-s is being done as an open science experiment with an open source codebase and dataset. We ~~build~~ train in public:
-- [`#research`](https://discord.com/invite/FTk2MvZwJH) : for discussions, updates, and questions
-- [`#research-livestream`](https://discord.com/invite/FTk2MvZwJH): see our training runs live
+We ~~build~~ train in public:
+- [Ichigo v0.2 Checkpoint Writeup](https://homebrew.ltd/blog/llama3-just-got-ears)
+- [Ichigo v0.1 Checkpoint Writeup](https://homebrew.ltd/blog/can-llama-3-listen)
 
-## Current Progress
+## Progress
 - 23 Aug: We’re excited to share [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2), our latest multimodal checkpoint with improved speech understanding by enhancing the model's audio instruction-following capabilities through training on interleaving synthetic data.  
 - 17 Aug: We pre-trained our LLaMA 3.1 model on continuous speech data, tokenized using WhisperSpeechVQ. The final loss converged to approximately 1.9, resulting in our checkpoint: [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2)
 - 2 Aug: Retrained phase 1 with llama3.1 and fixes to hyperparameters, achieving significant improvement (MMLU: 0.66 -> 0.61)
@@ -39,21 +39,9 @@ llama3-s is being done as an open science experiment with an open source codebas
 - 19 July: [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) understands synthetic voice with limited results
 - 1 July: [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) showed converging loss (1.7) with limited data
 
-## Training Runs: 
-
-We provide our fully finetuned models on Phase 1 and 2 data and the initialized model with expanded vocab.
-
-| Date       | Model Checkpoint                                                              | Dataset                                                                                                 | Tokens | Step  | Batch Size | Loss    | Training Cost |
-| ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------ | ----- | ---------- | ------- | ------------- |
-| 23 Aug 24 | [llama3.1-s-instruct-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-instruct-v0.2) | [Instruction-speech-whispervq-v2](https://huggingface.co/datasets/homebrewltd/instruction-speech-whispervq-v2)                                     | 440M  | 36305 | 128        | 0.7     |     ~240$     |
-| 17 Aug 24 | [llama3.1-s-base-v0.2](https://huggingface.co/homebrewltd/llama3.1-s-base-v0.2) | [Raw-speech-whispervq-v1](https://huggingface.co/datasets/homebrewltd/raw-speech-whispervq-v1)                                    | 900M  | 5042 | 480        | 1.9     |     ~563$     |
-| 19 July 24 | [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) | [Instruction-Speech-Full](https://huggingface.co/homebrew-research)                                     | 1.35B  | 1195k | 128        | 1.0     |     ~300$     |
-| 1 July 24  | [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) | [Instruction-Speech-Phase-2](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1.5) | 700M   | 1431k | 128        | 1.7-1.8 |     ~300$     |
-| 23 July 24 | [llama3-s-init](https://huggingface.co/homebrewltd/llama3-s-init)             | [Instruction-Speech-Phase-1](https://huggingface.co/datasets/homebrew-research/instruction-speech-v1)   | 0M     | N/A   | N/A        | N/A     |               |
-
 ## Join Us
 
-llama3-s is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
+:strawberry: Ichigo is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
 
 ### Quickstart with Google Colab
 
@@ -71,18 +59,23 @@ For detailed information on synthetic generation, please refer to the [Synthetic
 ```
 git clone --recurse-submodules https://github.com/homebrewltd/llama3-s.git
 ```
-2. Organize the folder structure as follows before training:
+
+2. The folder structure is as follows:
 ```
-llama3-s
-├── HF_Trainer
-├── synthetic_data
-├── scripts
-├── torchtune
-├── model_zoo
+Ichigo
+├── HF_Trainer                               # HF training code (deprecated)
+├── synthetic_data                           # Synthetic data generation pipeline
+    ├── configs                              # Audio pipeline configs
+        ├── audio_to_audio                   # Parler audio (.wav) to semantic tokens
+        ├── synthetic_generation_config      # TTS semantic tokens
+├── scripts                                  # Setup scripts for Runpod
+├── torchtune                                # Submodule: our fork of fsdp with checkpointing
+├── model_zoo                                # Model checkpoints
 │   ├── LLM
 │   │   ├── Meta-Llama-3-8B-Instruct
 │   │   ├── Meta-Llama-3-70B-Instruct
-
+├── demo                                     # Selfhost this demo (vllm)
+├── inference                                # Google Colab
 ```
 
 ### Training with HF Trainer
