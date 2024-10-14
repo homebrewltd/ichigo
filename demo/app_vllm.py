@@ -58,11 +58,11 @@ if not os.path.exists("whisper-vq-stoks-medium-en+pl-fixed.model"):
         local_dir=".",
     )
 vq_model = RQBottleneckTransformer.load_model(
-        "whisper-vq-stoks-medium-en+pl-fixed.model"
+        "whisper-vq-stoks-v3-7lang-fixed.model"
     ).to(device)
 vq_model.ensure_whisper(device)
-tts = TTSProcessor("cuda")
-llm_path = "homebrewltd/llama3.1-s-instruct-v0.2"
+tts = TTSProcessor(device)
+llm_path = "homebrewltd/Ichigo-llama3.1-s-instruct-v0.3-phase-3"
 vllm_generate, tokenizer = setup_vllm_pipeline(llm_path, use_8bit=False)
 
 def audio_to_sound_tokens_whisperspeech(audio_path, device="cuda"):
@@ -158,8 +158,8 @@ def process_audio(audio_file, transcript=False):
         yield partial_message.replace("<|start_header_id|>assistant<|end_header_id|>\n\n", "")
 
 with gr.Blocks() as iface:
-    gr.Markdown("# Llama3-1-S: checkpoint Aug 15, 2024")
-    gr.Markdown("Enter text to convert to audio, then submit the audio to generate text or Upload Audio")
+    gr.Markdown("# Ichigo-llama3-s: Llama3.1 with listening capabilities")
+    gr.Markdown("Record your voice or upload audio and send it to the model.")
     gr.Markdown("Powered by [Homebrew Ltd](https://homebrew.ltd/) | [Read our blog post](https://homebrew.ltd/blog/llama3-just-got-ears)")
     
     with gr.Row():
@@ -169,8 +169,8 @@ with gr.Blocks() as iface:
         # audio_output = gr.Audio(label="Converted Audio", type="filepath", visible=False)
     
     convert_button = gr.Button("Convert to Audio", visible=False)
-    submit_button = gr.Button("Submit for Processing")
-    transcrip_button = gr.Button("Please Transcribe the audio for me")
+    submit_button = gr.Button("Send")
+    transcrip_button = gr.Button("Make Model Transcribe the audio")
     
     text_output = gr.Textbox(label="Generated Text")
     
