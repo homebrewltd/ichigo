@@ -51,10 +51,10 @@ def setup_vllm_pipeline(model_path, use_8bit=False):
 
     return vllm_generate, tokenizer
 device = "cuda"
-if not os.path.exists("whisper-vq-stoks-medium-en+pl-fixed.model"):
+if not os.path.exists("whisper-vq-stoks-v3-7lang-fixed.model"):
     hf_hub_download(
         repo_id="jan-hq/WhisperVQ",
-        filename="whisper-vq-stoks-medium-en+pl-fixed.model",
+        filename="whisper-vq-stoks-v3-7lang-fixed.model",
         local_dir=".",
     )
 vq_model = RQBottleneckTransformer.load_model(
