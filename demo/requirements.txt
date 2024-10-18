@@ -7,8 +7,6 @@ pyarrow
 datasets
 encodec
 soundfile
-gradio==4.39.0
-transformers
 bitsandbytes
 vector_quantize_pytorch
 webdataset
@@ -17,4 +15,5 @@ whisperspeech
 torch==2.2.0
 torchaudio==2.2.0
 transformers
+gradio
 numpy==1.26.4
