@@ -59,7 +59,7 @@ Checkout this notebook to try our latest model:
 For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/README.md).
 
 ### Organize the input/output directory 
-1. First Clone the Repo from github:
+1. First Clone the Repo from GitHub:
 ```
 git clone --recurse-submodules https://github.com/homebrewltd/llama3-s.git
 ```
