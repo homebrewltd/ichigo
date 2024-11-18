@@ -61,7 +61,7 @@ For detailed information on synthetic generation, please refer to the [Synthetic
 ### Organize the input/output directory 
 1. First Clone the Repo from github:
 ```
-git clone --recurse-submodules https://github.com/homebrewltd/llama3-s.git
+git clone --recurse-submodules https://github.com/homebrewltd/ichigo.git
 ```
 
 2. The folder structure is as follows:
@@ -108,19 +108,24 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
 
 ### Training with Torchtune
 1. Install Package
-```
+```bash
 python -m venv torchtune
 pip install torch torchvision tensorboard
+mkdir model_zoo
 cd ./torchtune
 pip install -e .
 ```
-You can also download the model using tune:
+Logging Huggingface: 
+```bash
+huggingface-cli login --token=<token>
 ```
-tune download homebrewltd/llama3.1-s-whispervq-init --hf-token <token>  --output-dir ../model_zoo/llama3.1-s-whispervq-init --ignore-patterns "original/consolidated*"
+Download the [`tokenizer.model`](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/blob/main/original/tokenizer.model) and the required model using the `tune` in the `ichigo/model_zoo` directory:
+```bash
+tune download homebrewltd/llama3.1-s-whispervq-init --output-dir ../model_zoo/llama3.1-s-whispervq-init --ignore-patterns "original/consolidated*"
 ```
-Setup the Dataset from HF path by change the path and change the name of the model in the following YAML file.
-```
-nano torchtune/recipes/configs/jan-llama3-s/8B_full.yaml
+To set up the dataset, modify the path and the model name in the YAML configuration file:
+```bash
+nano torchtune/recipes/configs/jan-llama3-1-s/8B_full.yaml
 ```
 
 2. Training Multi GPU (1-8GPUs Supported)
