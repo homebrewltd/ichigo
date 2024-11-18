@@ -110,7 +110,7 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
 1. Install Package
 ```bash
 python -m venv torchtune
-pip install torch torchvision tensorboard
+pip install torch torchvision torchao tensorboard
 mkdir model_zoo
 cd ./torchtune
 pip install -e .
