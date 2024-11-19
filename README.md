@@ -80,7 +80,7 @@ python -m demo.app_vllm
 For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/README.md).
 
 ### Organize Directory 
-1. First Clone the Repo from github:
+1. First Clone the Repo from Github:
 ```
 git clone --recurse-submodules https://github.com/homebrewltd/ichigo.git
 ```
