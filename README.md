@@ -8,7 +8,7 @@
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 <a href='https://colab.research.google.com/drive/18IiwN0AzBZaox5o0iidXqWD1xKq11XbZ?usp=sharing'><img src='https://colab.research.google.com/assets/colab-badge.svg'></a>
 
-[**About**](#about) | [**Demo**](#demo) | [**Progress**](#progress) | [**Dataset**](#synthetic-generation) | [**Training**](#training-with-torchtune)
+[**About**](#about) | [**Demo**](#demo) | [**Progress**](#progress) | [**Data Pipeline**](#synthetic-generation) | [**Training**](#training-with-torchtune)
 
 
   <img src="images/ichigov0.2.jpeg" width="400"/>
