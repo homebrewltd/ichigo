@@ -6,6 +6,10 @@
 <a href='https://arxiv.org/pdf/2410.15316'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/homebrewltd'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
+<a href='https://colab.research.google.com/drive/18IiwN0AzBZaox5o0iidXqWD1xKq11XbZ?usp=sharing'><img src='https://colab.research.google.com/assets/colab-badge.svg'></a>
+
+[**About**](#about) | [**Demo**](#demo) | [**Progress**](#progress) | [**Data Pipeline**](#synthetic-generation) | [**Training**](#training-with-torchtune)
+
 
   <img src="images/ichigov0.2.jpeg" width="400"/>
   <p><small>Homebrewed early-fusion speech model</a></small></p>
@@ -32,6 +36,30 @@ We ~~build~~ train in public:
 - [Ichigo v0.2 Checkpoint Writeup](https://homebrew.ltd/blog/llama3-just-got-ears)
 - [Ichigo v0.1 Checkpoint Writeup](https://homebrew.ltd/blog/can-llama-3-listen)
 
+## Demo
+### WebUI
+For instructions on how to self-host the Ichigo web UI demo using Docker, please visit: [Ichigo demo](https://github.com/homebrewltd/ichigo-demo/tree/docker). To try our demo on a single RTX 4090 GPU, you can go directly to: https://ichigo.homebrew.ltd
+### Gradio Web UI
+We offer code for users to create a web UI demo. Please follow the instructions below:
+```
+python -m venv demo
+source demo/bin/activate
+# First install all required packages
+pip install --no-cache-dir -r ./demo/requirements.txt
+```
+Then run the command below to launch a Gradio demo locally. You can add the variables `use-4bit` and `use-8bit` for quantized usage:
+
+```
+python -m demo.app --host 0.0.0.0 --port 7860 --max-seq-len 1024 
+```
+
+You can also host a demo using vLLM for faster inference but its not support streaming output:
+
+```
+python -m demo.app_vllm
+```
+**Alternatively, you can easily try our demo on [HuggingFace](https://huggingface.co/spaces/jan-hq/Llama3.1-s-v0.2) 🤗**
+
 ## Progress
 - 11 Nov: [Ichigo v0.4](https://huggingface.co/collections/homebrewltd/ichigo-v04-67317bde6dfdfdd55dddbc6e) models are now available. This update introduces a unified training pipeline by consolidating Phases 2 and 3, with training data enhancements that include migrating speech noise and multi-turn data to Phase 2 and adding synthetic noise-augmented multi-turn conversations. Achieving an improved MMLU score of 64.63, the model now boasts stronger context handling, advanced noise management, and enhanced multi-turn capabilities for a more robust and responsive user experience.
 - 22 Oct: 📑 Research Paper Release: We are pleased to announce the publication of our research paper detailing the development and technical innovations behind Ichigo series. The full technical details, methodology, and experimental results are now available in our [paper](https://arxiv.org/pdf/2410.15316). 
@@ -47,19 +75,12 @@ We ~~build~~ train in public:
 
 :strawberry: Ichigo is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
 
-### Quickstart with Google Colab
-
-Checkout this notebook to try our latest model:
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18IiwN0AzBZaox5o0iidXqWD1xKq11XbZ?usp=sharing)
-
-
 ###  Synthetic Generation
 
 For detailed information on synthetic generation, please refer to the [Synthetic Generation Guide](synthetic_data/README.md).
 
-### Organize the input/output directory 
-1. First Clone the Repo from github:
+### Organize Directory 
+1. First Clone the Repo from Github:
 ```
 git clone --recurse-submodules https://github.com/homebrewltd/ichigo.git
 ```
@@ -132,29 +153,6 @@ nano torchtune/recipes/configs/jan-llama3-1-s/8B_full.yaml
 ```
 tune run --nproc_per_node 4 full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/8B_full.yaml
 ```
-## Demo
-### WebUI
-For instructions on how to self-host the Ichigo web UI demo using Docker, please visit: [Ichigo demo](https://github.com/homebrewltd/ichigo-demo/tree/docker). To try our demo on a single RTX 4090 GPU, you can go directly to: https://ichigo.homebrew.ltd.
-### Gradio Web UI
-We offer code for users to create a web UI demo. Please follow the instructions below:
-```
-python -m venv demo
-source demo/bin/activate
-# First install all required packages
-pip install --no-cache-dir -r ./demo/requirements.txt
-```
-Then run the command below to launch a Gradio demo locally. You can add the variables `use-4bit` and `use-8bit` for quantized usage:
-
-```
-python -m demo.app --host 0.0.0.0 --port 7860 --max-seq-len 1024 
-```
-
-You can also host a demo using vLLM for faster inference but its not support streaming output:
-
-```
-python -m demo.app_vllm
-```
-**Alternatively, you can easily try our demo on [HuggingFace](https://huggingface.co/spaces/jan-hq/Llama3.1-s-v0.2) 🤗**
 ## References
 ```bibtex
 @misc{chameleonteam2024chameleonmixedmodalearlyfusionfoundation,
