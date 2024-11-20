@@ -71,9 +71,8 @@ python -m demo.app_vllm
 - 19 July: [llama3-s-2024-07-19](https://huggingface.co/homebrewltd/llama3-s-2024-07-19) understands synthetic voice with limited results
 - 1 July: [llama3-s-2024-07-08](https://huggingface.co/homebrewltd/llama3-s-2024-07-08) showed converging loss (1.7) with limited data
 
-## Join Us
+## Data Synthetic and Training Instruction
 
-:strawberry: Ichigo is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
 
 ###  Synthetic Generation
 
@@ -103,7 +102,7 @@ Ichigo
 ├── inference                                # Google Colab
 ```
 
-### Training with HF Trainer
+### Training with HF Trainer (Deprecated) 
 1. Install Dependencies
 ```
 python -m venv hf_trainer
@@ -128,31 +127,58 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
 ```
 
 ### Training with Torchtune
-1. Install Package
-```bash
-python -m venv torchtune
-pip install torch torchvision torchao tensorboard
-mkdir model_zoo
-cd ./torchtune
-pip install -e .
-```
-Logging Huggingface: 
-```bash
-huggingface-cli login --token=<token>
-```
-Download the [`tokenizer.model`](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/blob/main/original/tokenizer.model) and the required model using the `tune` in the `ichigo/model_zoo` directory:
-```bash
-tune download homebrewltd/llama3.1-s-whispervq-init --output-dir ../model_zoo/llama3.1-s-whispervq-init --ignore-patterns "original/consolidated*"
-```
-To set up the dataset, modify the path and the model name in the YAML configuration file:
-```bash
-nano torchtune/recipes/configs/jan-llama3-1-s/8B_full.yaml
-```
 
-2. Training Multi GPU (1-8GPUs Supported)
-```
-tune run --nproc_per_node 4 full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/8B_full.yaml
-```
+1. **Install Package**
+      ```bash
+      python -m venv torchtune
+      pip install torch torchvision torchao tensorboard
+      mkdir model_zoo
+      cd ./torchtune
+      pip install -e .
+      ```
+      Logging Huggingface: 
+      ```bash
+      huggingface-cli login --token=<token>
+      ```
+      Download the [`tokenizer.model`](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/blob/main/original/tokenizer.model) and the required model using the `tune` in the `ichigo/model_zoo` directory:
+      ```bash
+      tune download homebrewltd/llama3.1-s-whispervq-init --output-dir ../model_zoo/llama3.1-s-whispervq-init --ignore-patterns "original/consolidated*"
+      ```
+
+2. **Pretraining Multi GPU (1-8GPUs Supported)**
+      ```
+      tune run --nproc_per_node <no-gpu> full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/pretrain/8B_full.yaml
+      ```
+      [NOTE] : After training finished, please use this script to convert checkpoint to format that can be loaded by HF transformers:
+      ```python
+      from transformers import AutoModelForCausalLM, AutoTokenizer
+      from huggingface_hub import HfApi, HfFolder
+      import torch
+      import os
+      import glob
+      from tqdm import tqdm
+
+      # folder containing the checkpoint files
+      output_dir = "../model_zoo/llama3-1-s-base"
+      pt_to_merge = glob.glob(f"{output_dir}/hf_model_000*_1.pt")
+      state_dicts = [torch.load(p) for p in tqdm(pt_to_merge)]
+      merged_state_dicts = {k: v for d in state_dicts for k, v in d.items()}
+      torch.save(merged_state_dicts, f"{output_dir}/pytorch_model.bin")
+      model = AutoModelForCausalLM.from_pretrained(output_dir, torch_dtype=torch.bfloat16)
+      print(model)
+      tokenizer_path = "homebrewltd/llama3.1-s-whispervq-init"
+      tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+      # # Save the updated model and tokenizer locally
+      tokenizer.save_pretrained(output_dir)
+      model.push_to_hub("<your_hf>/Llama3.1-s-base")
+      tokenizer.push_to_hub("<your_hf>/Llama3.1-s-base")
+      ```
+3. **Instruction Tuning**
+      
+      Download checkpoint from huggingface using the `tune` or use your local pretrained checkpoint located at `model_zoo/llama3-1-s-base`:
+      ```
+      tune run --nproc_per_node <no-gpu> full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/finetune/8B_full.yaml
+      ```
 ## References
 ```bibtex
 @misc{chameleonteam2024chameleonmixedmodalearlyfusionfoundation,
@@ -192,6 +218,9 @@ tune run --nproc_per_node 4 full_finetune_fsdp2 --config recipes/configs/jan-lla
       note={GitHub repository}
 }
 ```
+## Join Us
+
+:strawberry: Ichigo is an open research project. We're looking for collaborators, and will likely move towards crowdsourcing speech datasets in the future. 
 ## Acknowledgement
 
 - [Torchtune](https://github.com/pytorch/torchtune): The codebase we built upon
