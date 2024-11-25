@@ -144,9 +144,7 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
       ```bash
       tune download homebrewltd/llama3.1-s-whispervq-init --output-dir ../model_zoo/llama3.1-s-whispervq-init --ignore-patterns "original/consolidated*"
       ```
-
-2. **Pretraining Multi GPU (1-8GPUs Supported)**
-      [NOTE] : Before start training, make sure you uploaded the resized embedding model to Hugging Face Hub:
+      [NOTE] : In case you want to use different base model, you can uploaded your own resized embedding model to Hugging Face Hub:
       ```python
       # folder containing the checkpoint files
       model_name = "meta-llama/Llama-3.2-3B-Instruct"
@@ -160,6 +158,8 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
       model.push_to_hub("<your_hf>/Llama3.1-s-whispervq-init")
       tokenizer.push_to_hub("<your_hf>/Llama3.1-s-whispervq-init")
       ```
+
+2. **Pretraining Multi GPU (1-8GPUs Supported)**
       ```
       tune run --nproc_per_node <no-gpu> full_finetune_fsdp2 --config recipes/configs/jan-llama3-1-s/pretrain/8B_full.yaml
       ```
