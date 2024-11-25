@@ -144,6 +144,20 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
       ```bash
       tune download homebrewltd/llama3.1-s-whispervq-init --output-dir ../model_zoo/llama3.1-s-whispervq-init --ignore-patterns "original/consolidated*"
       ```
+      [NOTE] : In case you want to use different base model, you can uploaded your own resized embedding model to Hugging Face Hub:
+      ```python
+      # folder containing the checkpoint files
+      model_name = "meta-llama/Llama-3.2-3B-Instruct"
+      model = AutoModelForCausalLM.from_pretrained(model_name, device_map="cpu", torch_dtype=torch.bfloat16) 
+      tokenizer = AutoTokenizer.from_pretrained(model_name)
+      sound_tokens = [f'<|sound_{num:04d}|>' for num in range(513)]
+      special_tokens = ["<|sound_start|>", "<|sound_end|>"]
+      num_added_tokens = tokenizer.add_special_tokens({"additional_special_tokens": special_tokens})
+      tokenizer.add_tokens(sound_tokens)
+      model.resize_token_embeddings(len(tokenizer))
+      model.push_to_hub("<your_hf>/Llama3.1-s-whispervq-init")
+      tokenizer.push_to_hub("<your_hf>/Llama3.1-s-whispervq-init")
+      ```
 
 2. **Pretraining Multi GPU (1-8GPUs Supported)**
       ```
@@ -168,12 +182,12 @@ accelerate launch --config_file ./accelerate_config.yaml train.py
       print(model)
       tokenizer_path = "homebrewltd/llama3.1-s-whispervq-init"
       tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
-      # # Save the updated model and tokenizer locally
+      # Save the updated model and tokenizer locally
       tokenizer.save_pretrained(output_dir)
       model.push_to_hub("<your_hf>/Llama3.1-s-base")
       tokenizer.push_to_hub("<your_hf>/Llama3.1-s-base")
       ```
-3. **Instruction Tuning**
+4. **Instruction Tuning**
       
       Download checkpoint from huggingface using the `tune` or use your local pretrained checkpoint located at `model_zoo/llama3-1-s-base`:
       ```
