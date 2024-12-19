@@ -1,25 +1,25 @@
 # Dataset configuration
 dataset:
-  name: "/home/phong/Workspace/mls_eng_10k_with_index" # Dataset name from Hugging Face
+  name: "/home/jan/BachVD/audio_data/viVoice/batch_0/" # Dataset name from Hugging Face
   split: "train" # Dataset split to use
-  remaining_indices_file: "/home/phong/Workspace/llama3-s/synthetic_data/locals/splitting_audio_indices/train/batch_11.json" # File to store remaining indices (List[int])
+  remaining_indices_file:  # File to store remaining indices (List[int])
   num_proc: 64 # Number of processes to use for loading data
 
 # Processing configuration
 processing:
-  devices: ["cuda:0", "cuda:1", "cuda:2", "cuda:3"] # List of GPUs to use
-  tokenizer: WhisperVQTokenizer
-  num_procs_per_device: 12 # Number of processes per GPU
+  devices: ["cuda:0", "cuda:1", "cuda:2", "cuda:3", "cuda:4", "cuda:5"] # List of GPUs to use
+  tokenizer: IchigoQuantizer #WhisperVQTokenizer
+  num_procs_per_device: 10 # Number of processes per GPU
   save_dir: "./locals/outputs/outputs_11" # Directory to save processed data
   save_batch_size: 150 # Batch size for saving processed data for each process
   max_retries: 3 # Maximum number of retries for processing a sample
   format: parquet # Format to save processed data
 
 test:
-  num_samples: 500 # Number of samples to 
-  tokenizer: WhisperVQTokenizer
+  num_samples: 100 # Number of samples to 
+  tokenizer: IchigoQuantizer #WhisperVQTokenizer
   devices: ["cuda:0"] # List of GPUs to use
-  num_procs_per_device: 6 # Number of processes per GPU
+  num_procs_per_device: 1 # Number of processes per GPU
   save_dir: "./locals/test" # Directory to save processed data
   save_batch_size: 5 # Batch size for saving processed data for each process
   max_retries: 3 # Maximum number of retries for processing a sample
