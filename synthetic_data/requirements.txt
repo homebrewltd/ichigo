@@ -9,8 +9,8 @@ datasets
 encodec
 boto3
 fire
-vector_quantize_pytorch
-webdataset
+vector_quantize_pytorch==1.6.22
+webdataset==0.2.85
 whisperspeech
 torch==2.2.0
 torchaudio==2.2.0
